@@ -113,8 +113,9 @@ export const AuthView: React.FC = () => {
       <div className="scanline" />
 
       <motion.div 
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
         className="w-full max-w-md bg-black/40 border border-white/10 rounded-3xl p-8 backdrop-blur-2xl shadow-2xl relative z-10"
       >
         <div className="flex flex-col items-center mb-10">
@@ -128,7 +129,7 @@ export const AuthView: React.FC = () => {
           <p className="text-cyan-400 font-mono text-[9px] mt-4 uppercase tracking-[0.4em] font-bold">GESTÃO DE EQUIPES EXTERNAS</p>
         </div>
 
-          <div className="space-y-6">
+        <div className="space-y-6">
           <div className="space-y-4">
             <div className="relative group">
               <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40 group-focus-within:text-cyan-400 transition-all" />
