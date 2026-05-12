@@ -190,7 +190,7 @@ export const AdminDesk: React.FC = () => {
   const { profile } = useStore();
 
   const menuItems = [
-    { id: 'dashboard', label: 'Desk', icon: LayoutDashboard },
+    { id: 'dashboard', label: 'Painel de Controle', icon: LayoutDashboard },
     { id: 'orders', label: 'Mobile Ops', icon: FileText },
     { id: 'technicians', label: 'Equipe', icon: Users },
     { id: 'maps', label: 'Maps', icon: MapIcon },
@@ -208,10 +208,8 @@ export const AdminDesk: React.FC = () => {
       {/* Sidebar */}
       <aside className="w-72 bg-black/40 border-r border-white/10 flex flex-col p-6 relative z-10 backdrop-blur-xl">
         <div className="mb-12 flex flex-col items-center">
-          <div className="w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(6,182,212,0.5)] mb-4">
-             <div className="w-7 h-7 border-2 border-white rotate-45 flex items-center justify-center">
-               <div className="w-2.5 h-2.5 bg-white" />
-             </div>
+          <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-[0_0_40px_rgba(34,211,238,0.3)] mb-4 p-2 overflow-hidden">
+             <img src="/logo_one.png" alt="Paraíso ONE" className="w-full h-full object-contain" />
           </div>
           <h1 className="text-xl font-bold tracking-tighter text-white uppercase">Paraíso <span className="text-cyan-500">One</span></h1>
           <p className="text-[8px] uppercase tracking-[0.4em] text-cyan-400/60 mt-1 font-black">Tactical Operations</p>
@@ -239,8 +237,8 @@ export const AdminDesk: React.FC = () => {
 
         <div className="mt-auto pt-6 border-t border-white/5 space-y-4">
           <div className="flex items-center gap-4 bg-white/5 p-4 rounded-2xl border border-white/10 backdrop-blur-lg">
-            <div className="w-10 h-10 rounded-lg bg-zinc-800 flex items-center justify-center font-black text-cyan-500 border border-cyan-500/20 shadow-[0_0_10px_rgba(6,182,212,0.2)]">
-              {profile?.name?.charAt(0)}
+            <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center font-black text-cyan-500 border border-white shadow-[0_0_15px_rgba(255,255,255,0.1)] overflow-hidden p-1">
+              <img src="/logo_cliente.png" alt="Cliente" className="w-full h-full object-contain" />
             </div>
             <div className="overflow-hidden">
               <p className="text-[10px] font-black text-white uppercase truncate tracking-wide">{profile?.name}</p>
@@ -306,12 +304,12 @@ export const AdminDesk: React.FC = () => {
           </AnimatePresence>
 
           {/* Footer developed credit */}
-          <footer className="mt-12 pt-8 border-t border-white/5 flex justify-between items-center opacity-40">
+          <footer className="mt-12 pt-8 border-t border-white/5 flex justify-between items-center opacity-70">
              <div className="flex items-center gap-4">
-                <div className="w-8 h-8 rounded-lg bg-zinc-900 border border-white/10 flex items-center justify-center grayscale opacity-60">
-                   <div className="w-3 h-3 bg-white rounded-full" />
+                <div className="w-14 h-8 rounded-lg bg-zinc-900 border border-white/10 flex items-center justify-center p-1">
+                   <img src="/logo_pixelynx.png" alt="Pixelynx" className="w-full h-full object-contain" />
                 </div>
-                <span className="text-[8px] uppercase tracking-[0.4em] text-white">Developed by Pixelynx Ops</span>
+                <span className="text-[8px] uppercase tracking-[0.4em] text-white/60">Powered by Pixelynx</span>
              </div>
              <p className="text-[8px] uppercase tracking-[0.4em] text-white/40">© 2026 Paraíso Segurança • v1.4.2 Production Ready</p>
           </footer>

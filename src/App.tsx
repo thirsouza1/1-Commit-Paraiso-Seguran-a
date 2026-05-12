@@ -75,15 +75,20 @@ export default function App() {
   if (loading) {
     return (
       <div className="h-screen bg-[#050505] flex flex-col items-center justify-center p-8 text-center relative overflow-hidden">
-        <div className="absolute inset-0 tech-grid opacity-10 pointer-events-none" />
+        <div className="absolute inset-0 tech-grid opacity-20 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-cyan-500/5 to-transparent pointer-events-none" />
         
         <div className="relative">
           <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-            className="w-16 h-16 border-2 border-cyan-500/10 border-t-cyan-500 rounded-full mb-8 shadow-[0_0_20px_rgba(6,182,212,0.2)]"
-          />
-          <Zap className="w-6 h-6 text-cyan-500 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -mt-4 animate-pulse" />
+            animate={{ 
+              rotate: 360,
+              scale: [1, 1.05, 1],
+            }}
+            transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+            className="w-24 h-24 bg-white rounded-full flex items-center justify-center mb-10 shadow-[0_0_50px_rgba(34,211,238,0.3)] p-2 overflow-hidden border-2 border-cyan-500/20"
+          >
+            <img src="/logo_one.png" alt="Paraíso ONE" className="w-full h-full object-contain" />
+          </motion.div>
         </div>
 
         <motion.div
@@ -91,18 +96,35 @@ export default function App() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <h2 className="text-white font-black uppercase tracking-[0.4em] text-xs mb-3">Conectando ao Centro de Comando</h2>
+          <h2 className="text-white font-black uppercase tracking-[0.4em] text-sm mb-3 cyan-text-glow">Conectando ao Centro de Comando</h2>
           <div className="flex flex-col items-center gap-1">
-            <p className="text-cyan-400/40 text-[9px] font-mono uppercase tracking-[0.3em] animate-pulse">Sincronizando Protocolos de Campo</p>
-            <div className="w-32 h-[1px] bg-white/5 mt-4 overflow-hidden">
+            <p className="text-cyan-400/40 text-[9px] font-mono uppercase tracking-[0.3em] animate-pulse">Sincronizando Protocolos Operacionais</p>
+            <div className="w-32 h-[1px] bg-white/5 mt-6 overflow-hidden">
               <motion.div 
                 animate={{ x: [-128, 128] }}
                 transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
-                className="w-full h-full bg-cyan-500/40 shadow-[0_0_10px_#22d3ee]"
+                className="w-full h-full bg-cyan-500 shadow-[0_0_10px_#22d3ee]"
               />
             </div>
           </div>
         </motion.div>
+
+        {/* Emergency Manual Action if profile is missing */}
+        {user && !profile && !loading && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="mt-12"
+          >
+            <button 
+              onClick={() => window.location.reload()}
+              className="px-6 py-2 border border-white/10 bg-white/5 rounded-full text-[10px] font-black uppercase tracking-widest text-white/40 hover:text-white transition-all shadow-lg backdrop-blur-md"
+            >
+              Refresh
+            </button>
+            <DevButton />
+          </motion.div>
+        )}
       </div>
     );
   }

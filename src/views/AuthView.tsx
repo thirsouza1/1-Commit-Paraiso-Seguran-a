@@ -118,10 +118,8 @@ export const AuthView: React.FC = () => {
         className="w-full max-w-md bg-black/40 border border-white/10 rounded-3xl p-8 backdrop-blur-2xl shadow-2xl relative z-10"
       >
         <div className="flex flex-col items-center mb-10">
-          <div className="w-16 h-16 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl flex items-center justify-center shadow-[0_0_25px_rgba(6,182,212,0.4)] mb-8">
-             <div className="w-9 h-9 border-2 border-white rotate-45 flex items-center justify-center">
-               <div className="w-3 h-3 bg-white" />
-             </div>
+          <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-[0_0_50px_rgba(34,211,238,0.3)] mb-8 p-2 overflow-hidden border-2 border-cyan-500/20">
+             <img src="/logo_one.png" alt="Paraíso ONE" className="w-full h-full object-contain" />
           </div>
           
           <h2 className="text-2xl font-black text-white tracking-[0.2em] text-center uppercase">
@@ -191,9 +189,9 @@ export const AuthView: React.FC = () => {
         </div>
 
         <div className="mt-10 pt-10 border-t border-white/5 text-center flex flex-col items-center gap-4">
-            <div className="flex items-center gap-3 opacity-20">
-              <div className="w-8 h-8 rounded-lg bg-zinc-900 border border-white/10 flex items-center justify-center grayscale">
-                 <div className="w-3 h-3 bg-white rounded-full" />
+            <div className="flex items-center gap-3 opacity-60">
+              <div className="w-16 h-10 rounded-lg bg-zinc-900 border border-white/10 flex items-center justify-center p-1.5">
+                 <img src="/logo_pixelynx.png" alt="Pixelynx" className="w-full h-full object-contain" />
               </div>
               <span className="text-[8px] uppercase tracking-[0.5em] text-white">PIXELYNX SECURE OPS</span>
             </div>

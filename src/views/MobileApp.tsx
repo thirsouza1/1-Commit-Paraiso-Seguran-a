@@ -16,7 +16,9 @@ import {
   AlertCircle,
   Zap,
   Map as MapIcon,
-  Route as RouteIcon
+  Route as RouteIcon,
+  Home,
+  LayoutGrid
 } from 'lucide-react';
 import { auth, db } from '../lib/firebase';
 import { collection, query, where, onSnapshot } from 'firebase/firestore';
@@ -28,7 +30,7 @@ export const MobileApp: React.FC = () => {
   const { profile } = useStore();
   const [orders, setOrders] = useState<any[]>([]);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('agenda');
+  const [activeTab, setActiveTab] = useState('home');
   const [selectedOS, setSelectedOS] = useState<any | null>(null);
   const [optimizedPath, setOptimizedPath] = useState<{ polyline: string, stops: any[] } | null>(null);
   const [isOptimizing, setIsOptimizing] = useState(false);
@@ -103,9 +105,8 @@ export const MobileApp: React.FC = () => {
       {/* Header */}
       <header className="p-6 flex justify-between items-center bg-black/40 border-b border-white/10 backdrop-blur-xl shrink-0 z-10">
         <div className="flex items-center gap-4">
-          <div className="w-10 h-10 rounded-lg bg-zinc-800 flex items-center justify-center text-cyan-500 font-black overflow-hidden relative border border-cyan-500/20">
-             {profile?.photoURL ? <img src={profile.photoURL} alt="Me" className="w-full h-full object-cover" /> : profile?.name?.charAt(0)}
-             <div className="absolute inset-0 ring-1 ring-cyan-500/50 rounded-lg animate-pulse pointer-events-none" />
+          <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center overflow-hidden border border-white shadow-[0_0_15px_rgba(255,255,255,0.1)] p-1">
+             <img src="/logo_cliente.png" alt="Paraíso Segurança" className="w-full h-full object-contain" />
           </div>
           <div>
             <h2 className="text-sm font-black uppercase tracking-tight leading-none text-white">{profile?.name}</h2>
@@ -124,54 +125,165 @@ export const MobileApp: React.FC = () => {
       {/* Content Area */}
       <main className="flex-1 overflow-y-auto p-5 pb-28 touch-pan-y z-10">
         <AnimatePresence mode="wait">
+          {activeTab === 'home' && (
+            <motion.div
+              key="home"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="space-y-6"
+            >
+              <div className="mb-8">
+                <h3 className="text-2xl font-black uppercase tracking-tighter text-white">Menu Principal</h3>
+                <p className="text-[10px] text-cyan-400/60 font-mono uppercase tracking-[0.3em] mt-1 font-bold">Painel de Controle Tático</p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <motion.button
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setActiveTab('agenda')}
+                  className="bg-black/40 border border-white/10 p-6 rounded-3xl flex flex-col items-center gap-4 backdrop-blur-xl relative group overflow-hidden"
+                >
+                  <div className="absolute inset-0 bg-cyan-500/5 opacity-0 group-active:opacity-100 transition-opacity" />
+                  <div className="w-14 h-14 bg-cyan-500/20 rounded-2xl flex items-center justify-center text-cyan-400 shadow-[0_0_20px_rgba(6,182,212,0.2)]">
+                    <ClipboardList className="w-7 h-7" />
+                  </div>
+                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white">Minha Agenda</span>
+                  <div className="absolute top-2 right-2 flex items-center justify-center">
+                    <div className="w-5 h-5 bg-cyan-500 rounded-full text-[10px] font-black flex items-center justify-center text-black">
+                      {orders.filter(o => o.status !== 'finished').length}
+                    </div>
+                  </div>
+                </motion.button>
+
+                <motion.button
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setActiveTab('maps')}
+                  className="bg-black/40 border border-white/10 p-6 rounded-3xl flex flex-col items-center gap-4 backdrop-blur-xl relative group overflow-hidden"
+                >
+                  <div className="absolute inset-0 bg-cyan-500/5 opacity-0 group-active:opacity-100 transition-opacity" />
+                  <div className="w-14 h-14 bg-cyan-500/20 rounded-2xl flex items-center justify-center text-cyan-400 shadow-[0_0_20px_rgba(6,182,212,0.2)]">
+                    <MapIcon className="w-7 h-7" />
+                  </div>
+                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white">Mapa Tático</span>
+                </motion.button>
+
+                <motion.button
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setActiveTab('active')}
+                  className="bg-black/40 border border-white/10 p-6 rounded-3xl flex flex-col items-center gap-4 backdrop-blur-xl relative group overflow-hidden"
+                >
+                  <div className="absolute inset-0 bg-cyan-500/5 opacity-0 group-active:opacity-100 transition-opacity" />
+                  <div className="w-14 h-14 bg-cyan-500/20 rounded-2xl flex items-center justify-center text-cyan-400 shadow-[0_0_20px_rgba(6,182,212,0.2)]">
+                    <Zap className="w-7 h-7" />
+                  </div>
+                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white">Active Ops</span>
+                </motion.button>
+
+                <motion.button
+                  whileTap={{ scale: 0.95 }}
+                  className="bg-black/40 border border-white/10 p-6 rounded-3xl flex flex-col items-center gap-4 backdrop-blur-xl opacity-40 relative overflow-hidden"
+                >
+                  <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center text-white/40">
+                    <Camera className="w-7 h-7" />
+                  </div>
+                  <span className="text-[8px] font-black uppercase tracking-[0.2em] text-white/40">Inventário</span>
+                </motion.button>
+              </div>
+
+              {/* Status Bar */}
+              <div className="mt-8 bg-cyan-500/5 border border-cyan-500/20 p-5 rounded-2xl backdrop-blur-md">
+                <div className="flex justify-between items-center mb-4">
+                  <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-cyan-400">Status do Sistema</h4>
+                  <span className="text-[9px] font-mono text-cyan-500/60 uppercase">v1.4.2 stable</span>
+                </div>
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center text-[10px]">
+                    <span className="text-white/40 uppercase tracking-widest font-bold">Conexão Backend</span>
+                    <span className="text-green-500 font-black uppercase">Online</span>
+                  </div>
+                  <div className="flex justify-between items-center text-[10px]">
+                    <span className="text-white/40 uppercase tracking-widest font-bold">Carga de Bateria</span>
+                    <span className="text-white font-black uppercase">94%</span>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+
           {activeTab === 'agenda' && (
             <motion.div
               key="agenda"
               initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 1.02 }}
+              className="h-full flex flex-col pt-4"
             >
-              <div className="flex justify-between items-end mb-6 px-1">
-                <div>
-                  <h3 className="text-2xl font-black uppercase tracking-tighter text-white">Minha Agenda</h3>
-                  <p className="text-[10px] text-cyan-400/60 font-mono uppercase tracking-[0.3em] mt-1 font-bold">Estratégia Técnica de Campo</p>
+              <div className="mb-12 px-1">
+                <h3 className="text-4xl font-black uppercase tracking-[-0.05em] text-white leading-none mb-2">Minha Agenda</h3>
+                <p className="text-[10px] text-cyan-400 font-mono uppercase tracking-[0.4em] font-black">Estratégia Técnica de Campo</p>
+              </div>
+
+              <div className="flex-1 flex flex-col items-center justify-center relative -mt-20">
+                {/* Decorative Tactical Frame */}
+                <div className="absolute w-64 h-64 border border-white/10 rounded-lg pointer-events-none opacity-40">
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#050505] px-4">
+                    <div className="w-1 h-1 bg-cyan-500 rounded-full" />
+                  </div>
                 </div>
-                <div className="flex flex-col items-end gap-2">
-                   <button 
-                     onClick={handleSmartRoute}
-                     disabled={isOptimizing || orders.length === 0}
-                     className="bg-cyan-500/20 border border-cyan-500/40 p-2 rounded-lg text-cyan-400 active:scale-95 transition-all disabled:opacity-30"
-                   >
-                     <RouteIcon className={`w-5 h-5 ${isOptimizing ? 'animate-spin' : ''}`} />
-                   </button>
-                   <div className="text-right">
-                      <p className="text-[10px] text-white/40 font-mono uppercase tracking-tighter">Pendentes</p>
-                      <p className="text-2xl font-black text-cyan-500 leading-none">{orders.filter(o => o.status !== 'finished').length}</p>
-                   </div>
+
+                <div className="py-24 flex flex-col items-center justify-center text-center px-8 relative overflow-hidden">
+                  <div className="absolute inset-0 bg-cyan-500/5 blur-[120px] pointer-events-none" />
+                  <div className="relative">
+                    <motion.div
+                      animate={{ 
+                        scale: [1, 1.05, 1],
+                        rotate: 360
+                      }}
+                      transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
+                      className="w-32 h-32 bg-white rounded-full flex items-center justify-center mb-10 shadow-[0_0_60px_rgba(34,211,238,0.2)] p-4 overflow-hidden border-2 border-cyan-500/20"
+                    >
+                      <img src="/logo_one.png" alt="Paraíso ONE" className="w-full h-full object-contain" />
+                    </motion.div>
+                    
+                    {/* Orbitals */}
+                    <motion.div 
+                      animate={{ rotate: -360 }}
+                      transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                      className="absolute inset-0 -m-4 border border-cyan-500/10 rounded-full pointer-events-none"
+                    />
+                  </div>
+                  
+                  <div className="mt-4">
+                    <h4 className="text-white font-black uppercase tracking-[0.6em] text-[11px] mb-3 cyan-text-glow">Sincronizando Agenda</h4>
+                    <p className="text-cyan-400/40 text-[8px] font-mono uppercase tracking-[0.5em] animate-pulse">Acessando Nucleo de Operações</p>
+                  </div>
                 </div>
               </div>
 
-              {isInitialLoading ? (
-                <div className="py-24 flex flex-col items-center justify-center text-center px-8 relative">
-                  <div className="absolute inset-0 bg-cyan-500/5 blur-[100px] pointer-events-none" />
-                  <div className="relative">
-                    <motion.div
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                      className="w-16 h-16 border-2 border-cyan-500/10 border-t-cyan-500 rounded-full mb-8 shadow-[0_0_20px_rgba(6,182,212,0.2)]"
-                    />
-                    <Zap className="w-5 h-5 text-cyan-500 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -mt-4 animate-pulse" />
-                  </div>
-                  <h4 className="text-white font-black uppercase tracking-[0.4em] text-[10px] mb-2">Sincronizando Agenda</h4>
-                  <p className="text-cyan-400/30 text-[8px] font-mono uppercase tracking-[0.3em]">Buscando dados operacionais em tempo real</p>
+              {/* Quick Actions (Floating) */}
+              <div className="absolute bottom-24 right-6">
+                <motion.button 
+                  whileTap={{ scale: 0.9 }}
+                  onClick={handleSmartRoute}
+                  disabled={isOptimizing || orders.length === 0}
+                  className="bg-cyan-500 w-14 h-14 rounded-full flex items-center justify-center text-black shadow-[0_0_30px_rgba(6,182,212,0.5)] active:bg-cyan-400 transition-all disabled:opacity-30 relative z-30"
+                >
+                  <RouteIcon className={`w-7 h-7 ${isOptimizing ? 'animate-spin' : ''}`} />
+                </motion.button>
+              </div>
+
+              {/* Show list icon if already loaded */}
+              {!isInitialLoading && orders.length > 0 && (
+                <div className="mt-auto pb-4 space-y-3">
+                   {orders.slice(0, 1).map(os => <OSCard key={os.id} os={os} />)}
+                   <button 
+                     onClick={() => setIsInitialLoading(true)} // Toggle back to loading screen for demo
+                     className="w-full py-3 text-[10px] font-black uppercase tracking-[0.3em] text-white/20 border border-white/5 rounded-2xl hover:bg-white/5 transition-all"
+                   >
+                     Ver Todos os Protocolos ({orders.length})
+                   </button>
                 </div>
-              ) : orders.length === 0 ? (
-                <div className="py-20 flex flex-col items-center justify-center opacity-20 text-center px-8 border border-dashed border-white/10 rounded-3xl">
-                  <AlertCircle className="w-12 h-12 mb-4" />
-                  <p className="text-[10px] font-black uppercase tracking-[0.4em]">Protocolo Vazio</p>
-                </div>
-              ) : (
-                orders.map(os => <OSCard key={os.id} os={os} />)
               )}
             </motion.div>
           )}
@@ -302,6 +414,14 @@ export const MobileApp: React.FC = () => {
 
       {/* Navigation Bar */}
       <nav className="h-20 bg-black/60 backdrop-blur-2xl border-t border-white/10 flex items-center justify-around px-4 shrink-0 relative z-20">
+        <button 
+          onClick={() => setActiveTab('home')}
+          className={`flex flex-col items-center gap-1.5 transition-all ${activeTab === 'home' ? 'text-cyan-400' : 'text-white/20'}`}
+        >
+          <div className={`w-1 h-1 rounded-full bg-cyan-400 mb-1 absolute top-0 transition-opacity ${activeTab === 'home' ? 'opacity-100' : 'opacity-0'}`} />
+          <Home className="w-6 h-6" />
+          <span className="text-[8px] font-black uppercase tracking-[0.2em]">Home</span>
+        </button>
         <button 
           onClick={() => setActiveTab('agenda')}
           className={`flex flex-col items-center gap-1.5 transition-all ${activeTab === 'agenda' ? 'text-cyan-400' : 'text-white/20'}`}
