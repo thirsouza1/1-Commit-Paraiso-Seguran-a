@@ -1,0 +1,84 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 0. Default Deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // 0.1 Global Helpers
+    function isSignedIn() { return request.auth != null; }
+    function isEmailVerified() { return isSignedIn() && request.auth.token.email_verified == true; }
+    function isAdmin() { return isSignedIn() && exists(/databases/$(database)/documents/admins/$(request.auth.uid)); }
+    function isOwner(userId) { return isSignedIn() && request.auth.uid == userId; }
+    function isValidId(id) { return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); }
+    function incoming() { return request.resource.data; }
+    function existing() { return resource.data; }
+
+    // 1. User Profiles
+    match /users/{userId} {
+      function isValidUser(data) {
+        return data.uid == request.auth.uid &&
+               data.name is string && data.name.size() <= 100 &&
+               data.email == request.auth.token.email &&
+               data.role in ['admin', 'technician'];
+      }
+      
+      allow get: if isSignedIn();
+      allow list: if isAdmin();
+      allow create: if isSignedIn() && isOwner(userId) && isValidUser(incoming()) && incoming().role == 'technician'; // New users default to tech
+      allow update: if isSignedIn() && (
+        isAdmin() || 
+        (isOwner(userId) && incoming().diff(existing()).affectedKeys().hasOnly(['status', 'lastLocation', 'updatedAt']) && incoming().updatedAt == request.time)
+      );
+    }
+
+    // 2. Admins Whitelist (Critical Protection)
+    match /admins/{userId} {
+      allow read: if isSignedIn();
+      allow write: if false; // Only manual setup or Cloud Functions
+    }
+
+    // 3. Clients
+    match /clients/{clientId} {
+      function isValidClient(data) {
+        return data.keys().hasAll(['name', 'address', 'createdAt']) &&
+               data.name is string && data.name.size() <= 200 &&
+               data.address is string && data.address.size() <= 500;
+      }
+      allow read: if isSignedIn();
+      allow write: if isAdmin() && isValidClient(incoming());
+    }
+
+    // 4. Service Orders
+    match /service_orders/{osId} {
+      function isValidOS(data) {
+        return data.clientId is string && isValidId(data.clientId) &&
+               data.techId is string && isValidId(data.techId) &&
+               data.status in ['pending', 'traveling', 'arrived', 'executing', 'paused', 'finished'] &&
+               data.createdAt is timestamp;
+      }
+
+      allow get: if isSignedIn() && (isAdmin() || existing().techId == request.auth.uid);
+      allow list: if isSignedIn() && (isAdmin() || resource.data.techId == request.auth.uid);
+      
+      allow create: if isAdmin() && isValidOS(incoming()) && incoming().createdAt == request.time;
+      
+      allow update: if isSignedIn() && isValidOS(incoming()) && (
+        isAdmin() || 
+        (existing().techId == request.auth.uid && 
+         existing().status != 'finished' && 
+         incoming().diff(existing()).affectedKeys().hasOnly(['status', 'checklist', 'photos', 'signature', 'arrivalTime', 'finishTime', 'totalTime', 'location', 'updatedAt']) &&
+         incoming().updatedAt == request.time)
+      );
+      
+      allow delete: if isAdmin();
+    }
+
+    // 5. Location Logs
+    match /locations/{logId} {
+      allow read: if isAdmin();
+      allow create: if isSignedIn() && incoming().techId == request.auth.uid && incoming().timestamp == request.time;
+    }
+  }
+}

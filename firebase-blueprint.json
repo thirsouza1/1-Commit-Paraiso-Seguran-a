@@ -1,0 +1,118 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "System user (Admin or Technician)",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "role": { "type": "string", "enum": ["admin", "technician"] },
+        "photoURL": { "type": "string" },
+        "phone": { "type": "string" },
+        "status": { "type": "string", "enum": ["online", "offline", "busy"] },
+        "lastLocation": {
+          "type": "object",
+          "properties": {
+            "lat": { "type": "number" },
+            "lng": { "type": "number" },
+            "timestamp": { "type": "string", "format": "date-time" }
+          }
+        },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "name", "email", "role"]
+    },
+    "Client": {
+      "title": "Client",
+      "description": "Customer entity",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "document": { "type": "string" },
+        "address": { "type": "string" },
+        "phone": { "type": "string" },
+        "whatsapp": { "type": "string" },
+        "email": { "type": "string" },
+        "location": {
+          "type": "object",
+          "properties": {
+            "lat": { "type": "number" },
+            "lng": { "type": "number" }
+          }
+        },
+        "contracts": { "type": "array", "items": { "type": "string" } },
+        "equipment": { "type": "array", "items": { "type": "object" } },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "address"]
+    },
+    "ServiceOrder": {
+      "title": "Service Order",
+      "description": "Technical service request",
+      "type": "object",
+      "properties": {
+        "clientId": { "type": "string" },
+        "clientName": { "type": "string" },
+        "address": { "type": "string" },
+        "techId": { "type": "string" },
+        "techName": { "type": "string" },
+        "priority": { "type": "string", "enum": ["low", "medium", "high", "critical"] },
+        "status": { "type": "string", "enum": ["pending", "traveling", "arrived", "executing", "paused", "finished"] },
+        "description": { "type": "string" },
+        "checklist": { "type": "array", "items": { "type": "object" } },
+        "photos": { "type": "array", "items": { "type": "string" } },
+        "signature": { "type": "string" },
+        "startTime": { "type": "string", "format": "date-time" },
+        "arrivalTime": { "type": "string", "format": "date-time" },
+        "finishTime": { "type": "string", "format": "date-time" },
+        "totalTime": { "type": "number" },
+        "location": {
+          "type": "object",
+          "properties": {
+            "lat": { "type": "number" },
+            "lng": { "type": "number" }
+          }
+        },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["clientId", "techId", "status", "createdAt"]
+    },
+    "LocationLog": {
+      "title": "Location Log",
+      "description": "Historical GPS tracks for technicians",
+      "type": "object",
+      "properties": {
+        "techId": { "type": "string" },
+        "lat": { "type": "number" },
+        "lng": { "type": "number" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  "firestore": {
+    "users": {
+      "schema": "User",
+      "description": "Profiles of all staff"
+    },
+    "clients": {
+      "schema": "Client",
+      "description": "Customer database"
+    },
+    "service_orders": {
+      "schema": "ServiceOrder",
+      "description": "Operational service orders"
+    },
+    "locations": {
+      "schema": "LocationLog",
+      "description": "Real-time location tracks"
+    },
+    "admins": {
+      "schema": { "type": "object", "properties": { "uid": { "type": "string" } } },
+      "description": "Whitelist of admin UIDs"
+    }
+  }
+}

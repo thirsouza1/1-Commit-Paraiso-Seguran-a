@@ -1,0 +1,6 @@
+{
+  "name": "Paraíso One",
+  "description": "Sua equipe técnica em tempo real. ERP operacional inteligente da Paraíso Segurança.",
+  "requestFramePermissions": ["geolocation", "camera"],
+  "majorCapabilities": ["Real-time Tracking", "Order Management", "Digital Signatures"]
+}
