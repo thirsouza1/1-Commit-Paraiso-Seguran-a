@@ -26,10 +26,10 @@ service cloud.firestore {
       
       allow get: if isSignedIn();
       allow list: if isAdmin();
-      allow create: if isSignedIn() && isOwner(userId) && isValidUser(incoming()) && incoming().role == 'technician'; // New users default to tech
+      allow create: if isSignedIn() && isOwner(userId) && isValidUser(incoming()); 
       allow update: if isSignedIn() && (
         isAdmin() || 
-        (isOwner(userId) && incoming().diff(existing()).affectedKeys().hasOnly(['status', 'lastLocation', 'updatedAt']) && incoming().updatedAt == request.time)
+        (isOwner(userId) && incoming().diff(existing()).affectedKeys().hasOnly(['status', 'lastLocation', 'updatedAt', 'name']) && incoming().updatedAt == request.time)
       );
     }
 

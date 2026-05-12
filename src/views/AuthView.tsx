@@ -1,17 +1,85 @@
 import React, { useState } from 'react';
-import { signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from '../lib/firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { motion } from 'motion/react';
-import { Shield, Key, Mail, Fingerprint } from 'lucide-react';
+import { Shield, Key, User, Fingerprint } from 'lucide-react';
 
 const LOGO_PARAISO = "http://paraisoseguranca.com.br/imagens/logo_topo.png";
 const googleProvider = new GoogleAuthProvider();
 
 export const AuthView: React.FC = () => {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  const handleLogin = async () => {
+    if (!username || !password) {
+      setError('POR FAVOR, INSIRA SUAS CREDENCIAIS');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+
+    try {
+      // Map user ID to a internal system email
+      const emailToUse = username.trim().toLowerCase().includes('@') 
+        ? username.trim().toLowerCase() 
+        : `${username.trim().toLowerCase()}@paraiso.one`;
+      
+      const pwd = password.trim();
+
+      try {
+        await signInWithEmailAndPassword(auth, emailToUse, pwd);
+      } catch (signInErr: any) {
+        console.warn('Sign-in check failed:', signInErr.code);
+        
+        // Handle initial creation for the specific Thiago credentials
+        const isBootstrapUser = username.trim().toLowerCase() === 'thiago' && pwd === 'Thiago@1920';
+        
+        if (
+          (signInErr.code === 'auth/user-not-found' || signInErr.code === 'auth/invalid-credential') && 
+          isBootstrapUser
+        ) {
+          console.info('Attempting to create bootstrap user Thiago in project:', auth.app.options.projectId);
+          try {
+            const credential = await createUserWithEmailAndPassword(auth, emailToUse, pwd);
+            await setDoc(doc(db, 'users', credential.user.uid), {
+              uid: credential.user.uid,
+              name: 'Thiago Admin',
+              email: emailToUse,
+              role: 'admin',
+              status: 'online',
+              createdAt: new Date().toISOString(),
+            });
+          } catch (createErr: any) {
+            console.error('Failed to create bootstrap user:', createErr);
+            throw createErr;
+          }
+        } else {
+          throw signInErr;
+        }
+      }
+    } catch (err: any) {
+      console.error('Detailed login error data:', {
+        code: err.code,
+        message: err.message,
+        projectId: auth.app.options.projectId
+      });
+      
+      if (err.code === 'auth/operation-not-allowed') {
+        setError(`ERRO: PROVEDOR DESATIVADO NO PROJETO: ${auth.app.options.projectId}`);
+      } else if (err.code === 'auth/invalid-credential' || err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password') {
+        setError('ACESSO NEGADO: CREDENCIAIS INCORRETAS');
+      } else {
+        setError(`ERRO DE AUTENTICAÇÃO: ${err.code || 'DESCONHECIDO'}`);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleGoogleSignIn = async () => {
     try {
@@ -65,23 +133,25 @@ export const AuthView: React.FC = () => {
         <div className="space-y-6">
           <div className="space-y-4">
             <div className="relative group">
-              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20 group-focus-within:text-cyan-500 transition-colors" />
+              <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20 group-focus-within:text-cyan-500 transition-colors" />
               <input 
-                type="email"
-                placeholder="REGISTRO CORPORATIVO"
-                className="w-full bg-white/5 border border-white/10 rounded-xl py-4 pl-12 pr-4 text-xs text-white placeholder:text-white/10 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/20 transition-all font-mono uppercase tracking-tighter"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                type="text"
+                placeholder="ID DE ACESSO"
+                className="w-full bg-white/5 border border-white/10 rounded-xl py-4 pl-12 pr-4 text-xs text-white placeholder:text-white/10 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/20 transition-all font-mono tracking-tighter"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
               />
             </div>
             <div className="relative group">
               <Key className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20 group-focus-within:text-cyan-500 transition-colors" />
               <input 
                 type="password"
-                placeholder="CHAVE DE SEGURANÇA"
-                className="w-full bg-white/5 border border-white/10 rounded-xl py-4 pl-12 pr-4 text-xs text-white placeholder:text-white/10 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/20 transition-all font-mono uppercase tracking-tighter"
+                placeholder="SENHA OPERACIONAL"
+                className="w-full bg-white/5 border border-white/10 rounded-xl py-4 pl-12 pr-4 text-xs text-white placeholder:text-white/10 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/20 transition-all font-mono tracking-tighter"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
               />
             </div>
           </div>
@@ -93,9 +163,17 @@ export const AuthView: React.FC = () => {
             </div>
           )}
 
-          <button className="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-black py-4 rounded-xl shadow-[0_0_25px_rgba(6,182,212,0.4)] transition-all flex items-center justify-center gap-3 active:scale-[0.98] uppercase tracking-[0.2em] text-sm">
-            <Fingerprint className="w-5 h-5" />
-            Vincular Identidade
+          <button 
+            onClick={handleLogin}
+            disabled={loading}
+            className="w-full bg-cyan-600 hover:bg-cyan-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-black py-4 rounded-xl shadow-[0_0_25px_rgba(6,182,212,0.4)] transition-all flex items-center justify-center gap-3 active:scale-[0.98] uppercase tracking-[0.2em] text-sm"
+          >
+            {loading ? (
+              <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+            ) : (
+              <Fingerprint className="w-5 h-5" />
+            )}
+            {loading ? 'Validando...' : 'Autenticar Sistema'}
           </button>
 
           <div className="relative py-4">
