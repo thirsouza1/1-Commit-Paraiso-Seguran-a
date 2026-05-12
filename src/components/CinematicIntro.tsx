@@ -22,6 +22,14 @@ export const CinematicIntro: React.FC = () => {
 
   return (
     <div className="fixed inset-0 bg-[#020202] overflow-hidden z-50 flex items-center justify-center">
+      {/* Skip Button */}
+      <button 
+        onClick={() => setCinematicFinished(true)}
+        className="fixed top-6 right-6 z-[60] bg-white/5 hover:bg-white/10 px-4 py-2 rounded-full border border-white/10 text-[10px] uppercase tracking-[0.2em] text-white/50 hover:text-white transition-all"
+      >
+        Pular Intro
+      </button>
+
       {/* Background Ambience: Rain & Particles */}
       <div className="absolute inset-0 opacity-20">
         {[...Array(50)].map((_, i) => (

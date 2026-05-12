@@ -1,4 +1,4 @@
-import { doc, getDocFromServer, setDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, getDoc, getDocFromServer, setDoc, serverTimestamp } from 'firebase/firestore';
 import { db, auth } from './firebase';
 
 export async function testConnection() {
@@ -8,6 +8,9 @@ export async function testConnection() {
     getDoc(connDoc).then(() => {
       console.info("Firebase: Connection verified");
     }).catch(e => {
+      // If we get permission-denied, it actually means we reached the server and it said NO.
+      // So connectivity is technically OK.
+      if (e.code === 'permission-denied' || e.message?.includes('permission')) return;
       console.warn("Firebase: Connectivity pending...", e.message);
     });
   } catch (error) {

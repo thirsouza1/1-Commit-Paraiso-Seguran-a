@@ -27,6 +27,7 @@ import { optimizeRoute } from '../services/mapsService';
 export const MobileApp: React.FC = () => {
   const { profile } = useStore();
   const [orders, setOrders] = useState<any[]>([]);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('agenda');
   const [selectedOS, setSelectedOS] = useState<any | null>(null);
   const [optimizedPath, setOptimizedPath] = useState<{ polyline: string, stops: any[] } | null>(null);
@@ -37,6 +38,10 @@ export const MobileApp: React.FC = () => {
     const q = query(collection(db, 'service_orders'), where('techId', '==', profile.uid));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       setOrders(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      setIsInitialLoading(false);
+    }, (error) => {
+      console.warn("Firestore connectivity warning:", error);
+      setIsInitialLoading(false);
     });
     return () => unsubscribe();
   }, [profile?.uid]);
@@ -146,7 +151,21 @@ export const MobileApp: React.FC = () => {
                 </div>
               </div>
 
-              {orders.length === 0 ? (
+              {isInitialLoading ? (
+                <div className="py-24 flex flex-col items-center justify-center text-center px-8 relative">
+                  <div className="absolute inset-0 bg-cyan-500/5 blur-[100px] pointer-events-none" />
+                  <div className="relative">
+                    <motion.div
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                      className="w-16 h-16 border-2 border-cyan-500/10 border-t-cyan-500 rounded-full mb-8 shadow-[0_0_20px_rgba(6,182,212,0.2)]"
+                    />
+                    <Zap className="w-5 h-5 text-cyan-500 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -mt-4 animate-pulse" />
+                  </div>
+                  <h4 className="text-white font-black uppercase tracking-[0.4em] text-[10px] mb-2">Sincronizando Agenda</h4>
+                  <p className="text-cyan-400/30 text-[8px] font-mono uppercase tracking-[0.3em]">Buscando dados operacionais em tempo real</p>
+                </div>
+              ) : orders.length === 0 ? (
                 <div className="py-20 flex flex-col items-center justify-center opacity-20 text-center px-8 border border-dashed border-white/10 rounded-3xl">
                   <AlertCircle className="w-12 h-12 mb-4" />
                   <p className="text-[10px] font-black uppercase tracking-[0.4em]">Protocolo Vazio</p>

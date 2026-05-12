@@ -6,6 +6,11 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
+    // 0.0 Test Connection (Connectivity Ping)
+    match /test/connection {
+      allow read: if true;
+    }
+
     // 0.1 Global Helpers
     function isSignedIn() { return request.auth != null; }
     function isEmailVerified() { return isSignedIn() && request.auth.token.email_verified == true; }
