@@ -128,25 +128,25 @@ export const AuthView: React.FC = () => {
           <p className="text-cyan-400 font-mono text-[9px] mt-4 uppercase tracking-[0.4em] font-bold">GESTÃO DE EQUIPES EXTERNAS</p>
         </div>
 
-        <div className="space-y-6">
+          <div className="space-y-6">
           <div className="space-y-4">
             <div className="relative group">
-              <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20 group-focus-within:text-cyan-500 transition-colors" />
+              <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40 group-focus-within:text-cyan-400 transition-all" />
               <input 
                 type="text"
                 placeholder="ID DE ACESSO"
-                className="w-full bg-white/5 border border-white/10 rounded-xl py-4 pl-12 pr-4 text-xs text-white placeholder:text-white/10 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/20 transition-all font-mono tracking-tighter"
+                className="w-full bg-white/10 border border-white/20 rounded-xl py-4 pl-12 pr-4 text-xs text-white placeholder:text-white/30 focus:outline-none focus:border-cyan-500/60 focus:ring-4 focus:ring-cyan-500/10 transition-all font-mono tracking-tighter"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
               />
             </div>
             <div className="relative group">
-              <Key className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20 group-focus-within:text-cyan-500 transition-colors" />
+              <Key className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40 group-focus-within:text-cyan-400 transition-all" />
               <input 
                 type="password"
                 placeholder="SENHA OPERACIONAL"
-                className="w-full bg-white/5 border border-white/10 rounded-xl py-4 pl-12 pr-4 text-xs text-white placeholder:text-white/10 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/20 transition-all font-mono tracking-tighter"
+                className="w-full bg-white/10 border border-white/20 rounded-xl py-4 pl-12 pr-4 text-xs text-white placeholder:text-white/30 focus:outline-none focus:border-cyan-500/60 focus:ring-4 focus:ring-cyan-500/10 transition-all font-mono tracking-tighter"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
@@ -161,18 +161,25 @@ export const AuthView: React.FC = () => {
             </div>
           )}
 
-          <button 
+          <motion.button 
             onClick={handleLogin}
             disabled={loading}
-            className="w-full bg-cyan-600 hover:bg-cyan-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-black py-4 rounded-xl shadow-[0_0_25px_rgba(6,182,212,0.4)] transition-all flex items-center justify-center gap-3 active:scale-[0.98] uppercase tracking-[0.2em] text-sm"
+            whileHover={{ scale: 1.01, boxShadow: "0 0 30px rgba(6,182,212,0.6)" }}
+            whileTap={{ scale: 0.96 }}
+            className="w-full bg-cyan-600 hover:bg-cyan-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-black py-4 rounded-xl shadow-[0_0_20px_rgba(6,182,212,0.3)] transition-all flex items-center justify-center gap-3 active:scale-[0.98] uppercase tracking-[0.2em] text-sm relative overflow-hidden"
           >
+            <motion.div 
+              initial={false}
+              animate={loading ? { x: 0 } : { x: "-100%" }}
+              className="absolute inset-0 bg-white/10 pointer-events-none"
+            />
             {loading ? (
               <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
             ) : (
               <Fingerprint className="w-5 h-5" />
             )}
             {loading ? 'Validando...' : 'Autenticar Sistema'}
-          </button>
+          </motion.button>
 
           <div className="relative py-4">
             <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-white/10"></div></div>

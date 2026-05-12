@@ -9,10 +9,10 @@ export const CinematicIntro: React.FC = () => {
 
   useEffect(() => {
     const timers = [
-      setTimeout(() => setStep(1), 1500), // Explosion to Globe Tracking
-      setTimeout(() => setStep(2), 5500), // Globe Tracking to Logo Reveal
-      setTimeout(() => setStep(3), 8500), // Reveal to Final Signature
-      setTimeout(() => setCinematicFinished(true), 11500),
+      setTimeout(() => setStep(1), 2000), // Explosion to Globe Tracking (longer stay on protocols)
+      setTimeout(() => setStep(2), 6500), // Globe Tracking to Logo Reveal (smoother zoom)
+      setTimeout(() => setStep(3), 9500), // Reveal to Final Signature
+      setTimeout(() => setCinematicFinished(true), 12500),
     ];
     return () => timers.forEach(clearTimeout);
   }, [setCinematicFinished]);
@@ -23,162 +23,199 @@ export const CinematicIntro: React.FC = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0, scale: 2 }}
-      className="absolute inset-0 flex items-center justify-center overflow-hidden"
+      className="absolute inset-0 flex items-center justify-center overflow-hidden bg-[#00040d]"
     >
       <div className="relative w-full h-full flex items-center justify-center">
-        {/* Satellites and Beams */}
-        <div className="absolute inset-0 pointer-events-none">
-          {[...Array(3)].map((_, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="absolute w-full h-full"
-            >
-              <motion.div
-                animate={{ 
-                  rotate: [0, 360],
-                  scale: [1, 1.1, 1]
-                }}
-                transition={{ duration: 10 + i * 2, repeat: Infinity, ease: "linear" }}
-                className="absolute inset-x-0 h-full flex items-start justify-center"
-              >
-                <div className="mt-20 flex flex-col items-center">
-                   <div className="relative">
-                     <motion.div 
-                        animate={{ opacity: [0.2, 0.8, 0.2] }}
-                        transition={{ duration: 1.5, repeat: Infinity }}
-                        className="absolute -inset-4 border border-cyan-400 rounded-full" 
-                     />
-                     <Globe className="w-10 h-10 text-cyan-400 drop-shadow-[0_0_10px_#22d3ee]" />
-                   </div>
-                   {/* GPS Beam */}
-                   <motion.div 
-                      initial={{ height: 0 }}
-                      animate={{ height: '400px' }}
-                      transition={{ duration: 1, delay: 0.5 }}
-                      className="w-[2px] bg-gradient-to-b from-cyan-400 to-transparent blur-[1px] relative opacity-40"
-                   >
-                     <motion.div 
-                        animate={{ y: [0, 400] }}
-                        transition={{ duration: 0.5, repeat: Infinity, ease: "linear" }}
-                        className="absolute top-0 left-0 w-full h-10 bg-white"
-                     />
-                   </motion.div>
-                </div>
-              </motion.div>
-            </motion.div>
-          ))}
+        {/* Deep Space Ambient Glow */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,163,255,0.15)_0%,transparent_100%)] opacity-40" />
+
+        {/* Global Connection Arcs (Background Layer) */}
+        <div className="absolute inset-0 pointer-events-none z-10 flex items-center justify-center">
+           {[...Array(8)].map((_, i) => (
+             <motion.div
+               key={i}
+               animate={{ 
+                 rotate: [i * 45, i * 45 + 360],
+                 opacity: [0.1, 0.3, 0.1]
+               }}
+               transition={{ duration: 30 + i * 10, repeat: Infinity, ease: "linear" }}
+               className="absolute w-[900px] h-[400px] border border-[#00A3FF]/30 rounded-[100%] shadow-[0_0_30px_rgba(0,163,255,0.05)]"
+               style={{ 
+                 rotateX: '75deg',
+                 rotateY: `${i * 22}deg`
+               }}
+             >
+                {/* Data Packets traveling on background arcs */}
+                <motion.div 
+                  animate={{ left: ['0%', '100%'] }}
+                  transition={{ duration: 4, repeat: Infinity, delay: i * 0.5, ease: "linear" }}
+                  className="absolute top-0 w-2 h-2 bg-white rounded-full blur-[2px] shadow-[0_0_10px_#fff]"
+                />
+             </motion.div>
+           ))}
         </div>
 
-        {/* The Globe Zoom Sequence */}
+        {/* The Digital Globe (Wireframe + Particles) */}
         <motion.div
           animate={{
-            scale: [1, 1.5, 4, 12],
-            x: [0, 0, -100, -450],
-            y: [0, 0, 50, 200]
+            scale: [1, 1.3, 4, 22],
+            x: [0, 0, -200, -800],
+            y: [0, 0, 120, 450]
           }}
           transition={{
-            duration: 4,
-            times: [0, 0.4, 0.7, 1],
+            duration: 6.5,
+            times: [0, 0.3, 0.6, 1],
             ease: "easeInOut"
           }}
-          className="relative w-[600px] h-[600px] flex items-center justify-center"
+          className="relative w-[700px] h-[700px] flex items-center justify-center z-20"
         >
-          {/* External Halo */}
-          <div className="absolute inset-0 border border-cyan-500/20 rounded-full animate-pulse" />
-          <div className="absolute -inset-10 border border-cyan-500/10 rounded-full border-dashed" />
+          {/* Outer Atmospheric Aura */}
+          <div className="absolute inset-0 bg-[#00A3FF]/20 blur-[130px] rounded-full animate-pulse" />
           
-          {/* Earth Mockup (Stylized) */}
-          <div className="w-[500px] h-[500px] rounded-full bg-black border-2 border-cyan-500/40 relative overflow-hidden shadow-[inset_0_0_80px_rgba(6,182,212,0.5)]">
-            {/* Map Grids */}
-            <div className="absolute inset-0 tech-grid opacity-40" />
-            
-            {/* Earth Rotation Simulation */}
-            <motion.div
-              animate={{ x: [-1000, 0] }}
-              transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-              className="absolute inset-y-0 w-[2000px] flex"
-            >
-               <div className="w-full h-full bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20" />
-            </motion.div>
+          <div className="w-[600px] h-[600px] rounded-full bg-[#010614] border border-[#00A3FF]/40 relative overflow-hidden shadow-[0_0_100px_rgba(0,163,255,0.5),inset_0_0_80px_rgba(0,163,255,0.4)]">
+            {/* The Wireframe Core (Lat/Long Lines) */}
+            <div className="absolute inset-0 z-10 opacity-60">
+              <svg className="w-full h-full" viewBox="0 0 600 600">
+                <defs>
+                   <linearGradient id="wireGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#00A3FF" stopOpacity="0.2" />
+                      <stop offset="50%" stopColor="#00A3FF" stopOpacity="0.6" />
+                      <stop offset="100%" stopColor="#00A3FF" stopOpacity="0.2" />
+                   </linearGradient>
+                </defs>
+                {/* Longitudinal Lines */}
+                {[...Array(12)].map((_, i) => (
+                  <ellipse 
+                    key={`lon-${i}`}
+                    cx="300" cy="300" rx={300 * Math.cos((i * Math.PI) / 6)} ry="300"
+                    stroke="url(#wireGrad)" strokeWidth="0.5" fill="none"
+                    className="origin-center"
+                  />
+                ))}
+                {/* Latitudinal Lines */}
+                {[...Array(8)].map((_, i) => (
+                  <ellipse 
+                    key={`lat-${i}`}
+                    cx="300" cy={75 * (i + 0.5)} rx={Math.sqrt(300*300 - Math.pow(300 - 75*(i+0.5), 2))} ry="15"
+                    stroke="url(#wireGrad)" strokeWidth="0.5" fill="none"
+                  />
+                ))}
+              </svg>
+            </div>
 
-            {/* Random Nodes across the globe */}
-            {[...Array(12)].map((_, j) => (
-              <motion.div
-                key={j}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: [0.2, 0.8, 0.2] }}
-                transition={{ duration: 2, delay: j * 0.3, repeat: Infinity }}
-                style={{ 
-                  top: `${20 + Math.random() * 60}%`, 
-                  left: `${10 + Math.random() * 80}%` 
-                }}
-                className="absolute w-1 h-1 bg-cyan-400 rounded-full shadow-[0_0_5px_#22d3ee]"
-              />
-            ))}
+            {/* Glowing Particle Surface */}
+            <div className="absolute inset-0 z-20 opacity-80">
+               {[...Array(150)].map((_, i) => (
+                 <motion.div
+                   key={i}
+                   initial={{ opacity: 0 }}
+                   animate={{ 
+                     opacity: [0.1, 0.8, 0.1],
+                     scale: [1, 1.5, 1]
+                   }}
+                   transition={{ 
+                     duration: 2 + Math.random() * 3, 
+                     repeat: Infinity, 
+                     delay: Math.random() * 2 
+                   }}
+                   className="absolute w-[2px] h-[2px] bg-[#00A3FF] rounded-full shadow-[0_0_8px_#00A3FF]"
+                   style={{ 
+                     top: `${Math.random() * 100}%`, 
+                     left: `${Math.random() * 100}%` 
+                   }}
+                 />
+               ))}
+            </div>
 
-            {/* Target Point: South America / Brazil / SSP */}
+            {/* Scanning Laser HUD (Minimized style, more tech-beam) */}
+            <motion.div 
+               animate={{ y: [-300, 300], opacity: [0, 0.5, 0] }}
+               transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+               className="absolute inset-x-0 h-[4px] bg-gradient-to-r from-transparent via-[#00A3FF] to-transparent blur-md z-40 top-1/2"
+            />
+
+            {/* Target Marker: ONE BRAZIL */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 2.5 }}
-              className="absolute top-[60%] left-[32%] w-4 h-4"
+              transition={{ delay: 3.5 }}
+              className="absolute top-[62%] left-[34%] w-10 h-10 z-50 flex items-center justify-center"
             >
               <div className="relative">
+                {/* Core Impact */}
                 <motion.div 
-                  animate={{ scale: [1, 3], opacity: [1, 0] }}
-                  transition={{ repeat: Infinity, duration: 1.5 }}
-                  className="absolute inset-0 bg-white rounded-full"
+                  animate={{ scale: [1, 4], opacity: [1, 0] }}
+                  transition={{ repeat: Infinity, duration: 2 }}
+                  className="absolute inset-0 bg-white rounded-full blur-md"
                 />
-                <div className="w-2 h-2 bg-white rounded-full shadow-[0_0_10px_#fff]" />
+                <div className="w-5 h-5 bg-white rounded-full shadow-[0_0_30px_#fff] border-2 border-[#00A3FF]" />
                 
-                {/* Location Tag */}
+                {/* Minimalist Tech Label */}
                 <motion.div
-                   initial={{ opacity: 0, x: 10 }}
-                   animate={{ opacity: 1, x: 20 }}
-                   transition={{ delay: 3 }}
-                   className="absolute whitespace-nowrap"
+                   initial={{ opacity: 0, scale: 0.8, x: 40 }}
+                   animate={{ opacity: 1, scale: 1, x: 55 }}
+                   transition={{ delay: 4.2 }}
+                   className="absolute whitespace-nowrap bg-black/95 border border-[#00A3FF] p-4 rounded-lg shadow-[0_0_40px_rgba(0,163,255,0.5)] backdrop-blur-3xl"
                 >
-                  <p className="text-[10px] font-black text-cyan-400 uppercase tracking-widest bg-black/80 px-2 py-1 rounded border border-cyan-400/30">
-                    S. S. DO PARAÍSO, MG
+                  <p className="text-[12px] font-black text-white uppercase tracking-[0.5em] mb-1">
+                    PROTOCOLO <span className="text-[#00A3FF]">ONE</span>
                   </p>
-                  <p className="text-[7px] font-mono text-white/60 mt-1">CEP: 37950-000</p>
+                  <div className="w-full h-[1px] bg-gradient-to-r from-[#00A3FF] to-transparent mb-2" />
+                  <div className="flex items-center gap-3">
+                     <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                     <p className="text-[9px] font-mono text-[#00A3FF]/80 uppercase tracking-widest font-black">S.S. DO PARAÍSO, BRASIL</p>
+                  </div>
                 </motion.div>
               </div>
             </motion.div>
           </div>
+
+          {/* High Energy Orbital Rings (Foreground Layer) */}
+          <div className="absolute inset-0 z-30 pointer-events-none scale-110">
+             {[...Array(3)].map((_, i) => (
+               <motion.div
+                 key={i}
+                 animate={{ rotate: 360 }}
+                 transition={{ duration: 12 + i * 4, repeat: Infinity, ease: "linear" }}
+                 className="absolute inset-0"
+               >
+                 <div 
+                   className="absolute top-0 left-1/2 -ml-[1px] h-full w-[2px] bg-gradient-to-b from-[#00A3FF] via-transparent to-transparent opacity-40 shadow-[0_0_20px_#00A3FF]"
+                   style={{ transform: `rotateY(${i * 60}deg)` }}
+                 />
+                 {/* Traveling Pulse Node */}
+                 <motion.div 
+                    animate={{ top: ['0%', '100%'], opacity: [0, 1, 0] }}
+                    transition={{ duration: 2, repeat: Infinity, delay: i * 0.7 }}
+                    className="absolute left-1/2 -ml-2 w-4 h-4 bg-white rounded-full blur-[2px] shadow-[0_0_15px_#fff]"
+                    style={{ transform: `rotateY(${i * 60}deg)` }}
+                 />
+               </motion.div>
+             ))}
+          </div>
         </motion.div>
 
-        {/* HUD Overlay Elements */}
-        <div className="absolute bottom-10 left-10 text-left border-l-2 border-cyan-500/30 pl-4">
-           <h4 className="text-[10px] font-mono text-cyan-400 uppercase tracking-widest mb-1">Rastreamento de Ativos</h4>
-           <div className="flex gap-2">
-              <div className="w-1 h-3 bg-cyan-500" />
-              <div className="w-1 h-3 bg-cyan-500/50" />
-              <div className="w-1 h-3 bg-cyan-500/20" />
-           </div>
-        </div>
-
-        <div className="absolute top-10 right-10 text-right">
-           <p className="text-[14px] font-black text-white uppercase tracking-[0.5em] mb-2 drop-shadow-lg">Sincronização Global</p>
-           <div className="h-1 w-32 bg-white/10 rounded-full overflow-hidden">
-              <motion.div 
-                animate={{ x: [-128, 128] }}
-                transition={{ duration: 2, repeat: Infinity }}
-                className="w-1/2 h-full bg-cyan-400 shadow-[0_0_15px_#22d3ee]"
-              />
-           </div>
-        </div>
-
-        <div className="absolute bottom-20 text-center w-full">
-           <motion.p 
-             initial={{ opacity: 0 }}
-             animate={{ opacity: 1 }}
-             className="text-[9px] font-black text-cyan-400 uppercase tracking-[1em] animate-pulse"
+        {/* Global Connection Pulses at the bottom */}
+        <div className="absolute bottom-12 text-center w-full z-40">
+           <motion.div
+             initial={{ opacity: 0, y: 20 }}
+             animate={{ opacity: 1, y: 0 }}
+             className="inline-block"
            >
-             Estabelecendo Conexão Orbital
-           </motion.p>
+              <h3 className="text-[14px] font-black text-white uppercase tracking-[1.5em] mb-6 drop-shadow-[0_0_20px_rgba(0,163,255,0.8)]">
+                PROCESSANDO REDE GLOBAL
+              </h3>
+              <div className="flex items-center justify-center gap-3">
+                 {[...Array(6)].map((_, i) => (
+                   <motion.div 
+                      key={i}
+                      animate={{ scale: [1, 2, 1], opacity: [0.3, 1, 0.3] }}
+                      transition={{ duration: 1.5, delay: i * 0.15, repeat: Infinity }}
+                      className="w-2 h-10 bg-[#00A3FF] rounded-full shadow-[0_0_15px_#00A3FF]"
+                   />
+                 ))}
+              </div>
+           </motion.div>
         </div>
       </div>
     </motion.div>
@@ -201,8 +238,8 @@ export const CinematicIntro: React.FC = () => {
             key="step0"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            exit={{ opacity: 0, scale: 2, filter: 'blur(20px)' }}
-            transition={{ duration: 0.5 }}
+            exit={{ opacity: 0, scale: 1.5, filter: 'blur(30px)' }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
             className="absolute inset-0 flex items-center justify-center"
           >
             <div className="relative w-full h-full">
@@ -217,21 +254,24 @@ export const CinematicIntro: React.FC = () => {
                     opacity: [0, 1, 0]
                   }}
                   transition={{ duration: 1.5, repeat: Infinity, delay: Math.random() * 0.5 }}
-                  className="absolute w-1.5 h-1.5 bg-white rounded-full shadow-[0_0_15px_#fff]"
+                  className="absolute w-2 h-2 bg-[#00A3FF] rounded-full shadow-[0_0_20px_#00A3FF,0_0_40px_#00A3FF]"
                 />
               ))}
-              <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-80">
+              <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-90">
                 <motion.circle 
                   cx="50%" cy="50%" r="0"
-                  animate={{ r: [0, 800], opacity: [1, 0] }}
-                  transition={{ duration: 1.5, repeat: Infinity }}
-                  stroke="#fff"
-                  strokeWidth="3"
+                  animate={{ r: [0, 900], opacity: [1, 0] }}
+                  transition={{ duration: 1.8, repeat: Infinity }}
+                  stroke="#00A3FF"
+                  strokeWidth="4"
                   fill="none"
                 />
               </svg>
               <div className="absolute inset-0 flex items-center justify-center">
-                 <h2 className="text-white font-black text-xl tracking-[1em] uppercase animate-pulse">Iniciando Protocolos</h2>
+                 <h2 className="text-[#00A3FF] font-black text-2xl tracking-[1.5em] uppercase animate-pulse drop-shadow-[0_0_25px_#00A3FF] text-center">
+                  <span className="block mb-2 opacity-50 text-sm tracking-[2em]">Iniciando</span>
+                  <span className="block">Protocolos</span>
+                 </h2>
               </div>
             </div>
           </motion.div>
