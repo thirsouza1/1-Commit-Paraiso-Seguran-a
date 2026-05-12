@@ -25,9 +25,9 @@ export const CinematicIntro: React.FC = () => {
       {/* Skip Button */}
       <button 
         onClick={() => setCinematicFinished(true)}
-        className="fixed top-6 right-6 z-[110] bg-white/5 hover:bg-white/10 px-4 py-2 rounded-full border border-white/10 text-[10px] uppercase tracking-[0.2em] text-white/50 hover:text-white transition-all backdrop-blur-md"
+        className="fixed top-6 right-6 z-[110] bg-white/10 hover:bg-white/20 px-5 py-2.5 rounded-full border border-white/30 text-[10px] uppercase tracking-[0.3em] text-white font-black transition-all backdrop-blur-xl shadow-[0_0_20px_rgba(255,255,255,0.1)]"
       >
-        Skip sequence
+        Pular introdução
       </button>
 
       <AnimatePresence mode="wait">
@@ -108,44 +108,44 @@ export const CinematicIntro: React.FC = () => {
             <div className="w-full max-w-lg grid grid-cols-2 gap-4 p-6 relative z-10">
               {/* HUD Elements */}
               {[
-                { icon: Globe, label: 'Global Network', sub: 'Satellite Uplink' },
-                { icon: Shield, label: 'Security Firewall', sub: 'Zero-Trust Protocol' },
-                { icon: Target, label: 'Asset Tracking', sub: 'GPS Precision' },
-                { icon: Cpu, label: 'Core Processor', sub: 'Tactical Kernel' },
-                { icon: Activity, label: 'Biometrics', sub: 'Status Monitoring' },
-                { icon: Database, label: 'Secure Storage', sub: 'Encrypted Vault' }
+                { icon: Globe, label: 'Rede Global', sub: 'Link via Satélite' },
+                { icon: Shield, label: 'Firewall de Segurança', sub: 'Protocolo Zero-Trust' },
+                { icon: Target, label: 'Rastreamento de Ativos', sub: 'Precisão GPS' },
+                { icon: Cpu, label: 'Processador Central', sub: 'Kernel Tático' },
+                { icon: Activity, label: 'Biometria', sub: 'Monitoramento de Status' },
+                { icon: Database, label: 'Storage Seguro', sub: 'Cofre Criptografado' }
               ].map((item, i) => (
                 <motion.div
                   key={i}
                   initial={{ opacity: 0, x: i % 2 === 0 ? -20 : 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.1 }}
-                  className="bg-black/60 border border-cyan-500/30 p-5 rounded-2xl backdrop-blur-xl relative overflow-hidden group shadow-[0_0_20px_rgba(6,182,212,0.1)]"
+                  className="bg-black/70 border border-cyan-500/50 p-5 rounded-2xl backdrop-blur-xl relative overflow-hidden group shadow-[0_0_25px_rgba(6,182,212,0.15)]"
                 >
                   <div className="absolute top-0 right-0 p-3">
-                    <Activity className="w-3 h-3 text-cyan-500/20" />
+                    <Activity className="w-3 h-3 text-cyan-500/40" />
                   </div>
                   
                   <div className="flex items-center gap-4 mb-4">
-                    <div className="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center border border-cyan-500/20 shadow-[inset_0_0_15px_rgba(6,182,212,0.1)]">
+                    <div className="w-12 h-12 rounded-xl bg-cyan-500/20 flex items-center justify-center border border-cyan-500/40 shadow-[inset_0_0_15px_rgba(6,182,212,0.2)]">
                       <item.icon className="w-6 h-6 text-cyan-400" />
                     </div>
                     <div>
                       <h4 className="text-[10px] font-black text-white uppercase tracking-widest">{item.label}</h4>
-                      <p className="text-[7px] text-cyan-500/60 font-mono uppercase tracking-[0.2em]">{item.sub}</p>
+                      <p className="text-[7px] text-cyan-400 font-mono uppercase tracking-[0.2em]">{item.sub}</p>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-3">
-                    <div className="h-1 flex-1 bg-white/5 rounded-full overflow-hidden">
+                    <div className="h-1 flex-1 bg-white/10 rounded-full overflow-hidden">
                       <motion.div 
                         initial={{ width: 0 }}
                         animate={{ width: '100%' }}
                         transition={{ duration: 1.5, delay: i * 0.2 }}
-                        className="h-full bg-gradient-to-r from-cyan-600 to-cyan-400 shadow-[0_0_8px_#06b6d4]"
+                        className="h-full bg-gradient-to-r from-cyan-500 to-cyan-300 shadow-[0_0_12px_#06b6d4]"
                       />
                     </div>
-                    <span className="text-[8px] font-mono text-cyan-500/40">v2.4</span>
+                    <span className="text-[8px] font-mono text-cyan-400">v2.4</span>
                   </div>
                 </motion.div>
               ))}
@@ -156,14 +156,14 @@ export const CinematicIntro: React.FC = () => {
             
             <div className="absolute bottom-16 left-1/2 -translate-x-1/2 text-center w-full">
               <div className="flex items-center justify-center gap-4 mb-4">
-                <div className="w-12 h-[1px] bg-gradient-to-r from-transparent to-cyan-500" />
-                <h3 className="text-[11px] font-black text-white uppercase tracking-[0.8em] cyan-text-glow">
+                <div className="w-12 h-[1px] bg-gradient-to-r from-transparent to-cyan-400" />
+                <h3 className="text-[12px] font-black text-white uppercase tracking-[1em] drop-shadow-[0_0_15px_rgba(34,211,238,0.6)]">
                   Sincronizando Nodes
                 </h3>
-                <div className="w-12 h-[1px] bg-gradient-to-l from-transparent to-cyan-500" />
+                <div className="w-12 h-[1px] bg-gradient-to-l from-transparent to-cyan-400" />
               </div>
-              <p className="text-[8px] font-mono text-cyan-500/40 uppercase tracking-[0.4em] animate-pulse">
-                Establishing military-grade connection
+              <p className="text-[8px] font-mono text-cyan-400 uppercase tracking-[0.4em] animate-pulse">
+                Estabelecendo conexão de nível militar
               </p>
             </div>
           </motion.div>
@@ -274,13 +274,13 @@ export const CinematicIntro: React.FC = () => {
             {/* Pixelynx Signature */}
             <motion.div 
               initial={{ opacity: 0 }}
-              animate={{ opacity: 0.4 }}
+              animate={{ opacity: 0.8 }}
               transition={{ delay: 1 }}
               className="absolute bottom-10 flex items-center gap-4 group"
             >
-              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white">Secure Ops by Pixelynx</span>
-              <div className="w-10 h-6 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center p-1">
-                <img src="/logo_pixelynx.png" alt="Pixelynx" className="w-full h-full object-contain grayscale" />
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white">Operações Seguras por Pixelynx</span>
+              <div className="w-10 h-6 rounded-lg bg-white/5 border border-white/20 flex items-center justify-center p-1">
+                <img src="/logo_pixelynx.png" alt="Pixelynx" className="w-full h-full object-contain grayscale invert" />
               </div>
             </motion.div>
           </motion.div>

@@ -91,24 +91,26 @@ export const MobileApp: React.FC = () => {
         <div className="flex justify-between items-center mb-1.5">
            <span className="text-[9px] font-black text-cyan-500/50 uppercase tracking-[0.2em] font-mono">OS.{os.id.slice(0, 8).toUpperCase()}</span>
            <div className="flex items-center gap-2">
-              <span className={`text-[8px] px-2 py-0.5 rounded-full font-black uppercase tracking-widest border ${
-                os.status === 'pending' ? 'bg-amber-500/10 text-amber-500 border-amber-500/20' : 'bg-green-500/10 text-green-500 border-green-500/20'
+               <span className={`text-[8px] px-2 py-0.5 rounded-full font-black uppercase tracking-[0.2em] border shadow-sm ${
+                os.status === 'pending' || os.status === 'pendente' 
+                  ? 'bg-amber-500/20 text-amber-400 border-amber-500/40 shadow-amber-500/20' 
+                  : 'bg-green-500/20 text-green-400 border-green-500/40 shadow-green-500/20'
               }`}>
-                {os.status}
+                {os.status === 'pending' ? 'Pendente' : os.status}
               </span>
            </div>
         </div>
-        <h4 className="text-white font-black text-base truncate tracking-tight uppercase">{os.clientName || 'Cliente Indefinido'}</h4>
+        <h4 className="text-white font-black text-base truncate tracking-tight uppercase group-hover:text-cyan-400 transition-colors">{os.clientName || 'Cliente Indefinido'}</h4>
         <div className="flex items-center gap-2 mt-2">
-          <div className="flex items-center gap-1.5 bg-white/5 px-2 py-1 rounded-lg border border-white/5">
-            <MapPin className="w-3 h-3 text-cyan-500" />
-            <p className="text-white/60 text-[9px] font-bold uppercase tracking-tighter truncate max-w-[120px]">
+          <div className="flex items-center gap-1.5 bg-white/10 px-2 py-1 rounded-lg border border-white/10">
+            <MapPin className="w-3 h-3 text-cyan-400" />
+            <p className="text-white text-[9px] font-black uppercase tracking-tighter truncate max-w-[120px]">
               {os.address.split(',')[0]}
             </p>
           </div>
-          <div className="flex items-center gap-1.5 bg-white/5 px-2 py-1 rounded-lg border border-white/5">
-            <Clock className="w-3 h-3 text-cyan-500" />
-            <p className="text-white/60 text-[9px] font-bold uppercase tracking-tighter">
+          <div className="flex items-center gap-1.5 bg-white/10 px-2 py-1 rounded-lg border border-white/10">
+            <Clock className="w-3 h-3 text-cyan-400" />
+            <p className="text-white text-[9px] font-black uppercase tracking-tighter">
               10:30
             </p>
           </div>
@@ -130,21 +132,21 @@ export const MobileApp: React.FC = () => {
       <div className="scanline" />
 
       {/* Header */}
-      <header className="p-6 flex justify-between items-center bg-black/40 border-b border-white/10 backdrop-blur-xl shrink-0 z-10">
+      <header className="p-6 flex justify-between items-center bg-black/60 border-b border-white/20 backdrop-blur-xl shrink-0 z-10">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center overflow-hidden border border-white shadow-[0_0_15px_rgba(255,255,255,0.1)] p-1">
+          <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center overflow-hidden border border-white shadow-[0_0_20px_rgba(255,255,255,0.2)] p-1">
              <img src="/logo_cliente.png" alt="Paraíso Segurança" className="w-full h-full object-contain" />
           </div>
           <div>
             <h2 className="text-sm font-black uppercase tracking-tight leading-none text-white">{profile?.name}</h2>
             <div className="flex items-center gap-2 mt-1">
-               <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-               <p className="text-cyan-400 font-mono text-[9px] uppercase tracking-widest font-bold">Operacional Ativo</p>
+               <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_#22c55e]" />
+               <p className="text-cyan-400 font-mono text-[9px] uppercase tracking-widest font-black">Operacional Ativo</p>
             </div>
           </div>
         </div>
-        <button className="relative p-2.5 bg-white/5 rounded-xl border border-white/10 active:scale-90 transition-transform backdrop-blur-md">
-           <Bell className="w-5 h-5 text-white/50" />
+        <button className="relative p-2.5 bg-white/10 rounded-xl border border-white/20 active:scale-90 transition-transform backdrop-blur-md">
+           <Bell className="w-5 h-5 text-white/80" />
            <span className="absolute top-2.5 right-2.5 w-1.5 h-1.5 bg-cyan-500 rounded-full shadow-[0_0_8px_#06b6d4]" />
         </button>
       </header>
@@ -163,11 +165,11 @@ export const MobileApp: React.FC = () => {
               <div className="mb-6 px-1">
                 <div className="flex justify-between items-start">
                   <div>
-                    <h3 className="text-3xl font-black uppercase tracking-tighter text-white leading-none">Command</h3>
-                    <p className="text-[10px] text-cyan-400 font-mono uppercase tracking-[0.4em] mt-1 font-black">Tactical Operations Hub</p>
+                    <h3 className="text-3xl font-black uppercase tracking-tighter text-white leading-none">Comando</h3>
+                    <p className="text-[10px] text-cyan-400 font-mono uppercase tracking-[0.4em] mt-1 font-black">Centro de Operações Táticas</p>
                   </div>
-                  <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
-                    <LayoutGrid className="w-5 h-5 text-cyan-500/60" />
+                  <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center">
+                    <LayoutGrid className="w-5 h-5 text-cyan-400" />
                   </div>
                 </div>
               </div>
@@ -177,30 +179,30 @@ export const MobileApp: React.FC = () => {
                 <motion.button
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setActiveTab('maps')}
-                  className="bg-white/5 border border-cyan-500/30 p-6 rounded-[2.5rem] flex flex-col items-center gap-4 backdrop-blur-2xl relative group overflow-hidden h-40 justify-center shadow-[0_0_20px_rgba(6,182,212,0.1)]"
+                  className="bg-white/5 border border-cyan-500/50 p-6 rounded-[2.5rem] flex flex-col items-center gap-4 backdrop-blur-2xl relative group overflow-hidden h-40 justify-center shadow-[0_0_30px_rgba(6,182,212,0.2)]"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                  <div className="w-14 h-14 bg-cyan-500/20 rounded-2xl flex items-center justify-center text-cyan-400 shadow-[0_0_20px_rgba(6,182,212,0.2)] border border-cyan-500/30 relative z-10">
+                  <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="w-14 h-14 bg-cyan-500/30 rounded-2xl flex items-center justify-center text-cyan-400 shadow-[0_0_20px_rgba(6,182,212,0.4)] border border-cyan-500/40 relative z-10">
                     <MapIcon className="w-7 h-7" />
                   </div>
                   <div className="text-center relative z-10">
                     <span className="text-[11px] font-black uppercase tracking-[0.2em] text-white">Mapa Tático</span>
-                    <p className="text-[8px] text-cyan-500/50 uppercase mt-1 tracking-widest font-bold">Rotas em Tempo Real</p>
+                    <p className="text-[8px] text-cyan-400 uppercase mt-1 tracking-widest font-black">Rotas em Tempo Real</p>
                   </div>
                 </motion.button>
 
                 <motion.button
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setActiveTab('active')}
-                  className="bg-white/5 border border-cyan-500/30 p-6 rounded-[2.5rem] flex flex-col items-center gap-4 backdrop-blur-2xl relative group overflow-hidden h-40 justify-center shadow-[0_0_20px_rgba(6,182,212,0.1)]"
+                  className="bg-white/5 border border-cyan-500/50 p-6 rounded-[2.5rem] flex flex-col items-center gap-4 backdrop-blur-2xl relative group overflow-hidden h-40 justify-center shadow-[0_0_30px_rgba(6,182,212,0.2)]"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                  <div className="w-14 h-14 bg-cyan-500/20 rounded-2xl flex items-center justify-center text-cyan-400 shadow-[0_0_20px_rgba(6,182,212,0.2)] border border-cyan-500/30 relative z-10">
+                  <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="w-14 h-14 bg-cyan-500/30 rounded-2xl flex items-center justify-center text-cyan-400 shadow-[0_0_20px_rgba(6,182,212,0.4)] border border-cyan-500/40 relative z-10">
                     <Zap className="w-7 h-7" />
                   </div>
                   <div className="text-center relative z-10">
-                    <span className="text-[11px] font-black uppercase tracking-[0.2em] text-white">Active Ops</span>
-                    <p className="text-[8px] text-cyan-500/50 uppercase mt-1 tracking-widest font-bold">Intervenção Rápida</p>
+                    <span className="text-[11px] font-black uppercase tracking-[0.2em] text-white">Ações Ativas</span>
+                    <p className="text-[8px] text-cyan-400 uppercase mt-1 tracking-widest font-black">Intervenção Rápida</p>
                   </div>
                 </motion.button>
               </div>
@@ -213,8 +215,8 @@ export const MobileApp: React.FC = () => {
                     <p className="text-[10px] text-cyan-400 font-mono uppercase tracking-[0.4em] font-black mt-2">Protocolos Estratégicos</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-3xl font-black text-white leading-none drop-shadow-[0_0_10px_rgba(6,182,212,0.5)]">{orders.filter(o => o.status !== 'finished').length}</p>
-                    <p className="text-[9px] text-cyan-400 font-black uppercase tracking-tighter mt-1">Ativos</p>
+                    <p className="text-3xl font-black text-white leading-none drop-shadow-[0_0_15px_rgba(34,211,238,0.7)]">{orders.filter(o => o.status !== 'finished').length}</p>
+                    <p className="text-[9px] text-cyan-400 font-extrabold uppercase tracking-tighter mt-1">Ativos</p>
                   </div>
                 </div>
 
@@ -232,14 +234,14 @@ export const MobileApp: React.FC = () => {
                   </motion.div>
                   
                   <div className="mt-6 text-center relative z-10">
-                    <p className="text-white font-black tracking-[0.6em] uppercase text-[10px] mb-2 cyan-text-glow">Syncing tactical nodes</p>
+                    <p className="text-white font-black tracking-[0.6em] uppercase text-[10px] mb-2 drop-shadow-[0_0_10px_rgba(34,211,238,0.5)]">Sincronizando nós táticos</p>
                     <div className="flex items-center justify-center gap-1">
                        {[...Array(3)].map((_, i) => (
                          <motion.div 
                            key={i}
-                           animate={{ opacity: [0.2, 1, 0.2] }}
+                           animate={{ opacity: [0.4, 1, 0.4] }}
                            transition={{ duration: 1.5, delay: i * 0.3, repeat: Infinity }}
-                           className="w-1 h-1 bg-cyan-500 rounded-full"
+                           className="w-1.5 h-1.5 bg-cyan-400 rounded-full shadow-[0_0_12px_rgba(34,211,238,0.7)]"
                          />
                        ))}
                     </div>
@@ -248,8 +250,8 @@ export const MobileApp: React.FC = () => {
 
                 {isInitialLoading ? (
                    <div className="py-12 flex flex-col items-center justify-center gap-4">
-                      <div className="w-10 h-10 border-4 border-cyan-500/20 border-t-cyan-500 rounded-full animate-spin shadow-[0_0_15px_rgba(6,182,212,0.2)]" />
-                      <p className="text-[10px] font-black text-cyan-400 uppercase tracking-[0.4em] animate-pulse">Estabelecendo Conexão Secura</p>
+                      <div className="w-10 h-10 border-4 border-cyan-500/30 border-t-cyan-400 rounded-full animate-spin shadow-[0_0_20px_rgba(6,182,212,0.4)]" />
+                      <p className="text-[10px] font-black text-cyan-300 uppercase tracking-[0.4em] animate-pulse">Estabelecendo Conexão Segura</p>
                    </div>
                 ) : orders.length === 0 ? (
                   <div className="py-16 flex flex-col items-center justify-center opacity-40 text-center px-10 border border-dashed border-cyan-500/30 rounded-[2.5rem] bg-cyan-500/5">
@@ -321,13 +323,13 @@ export const MobileApp: React.FC = () => {
                   </p>
 
                   <div className="grid grid-cols-2 gap-4">
-                     <button className="bg-white/5 border border-white/10 rounded-2xl p-5 flex flex-col items-center justify-center gap-3 active:bg-cyan-500/20 active:border-cyan-500/50 transition-all backdrop-blur-md">
+                     <button className="bg-white/10 border border-white/20 rounded-2xl p-5 flex flex-col items-center justify-center gap-3 active:bg-cyan-500/30 active:border-cyan-500/60 transition-all backdrop-blur-xl shadow-lg">
                         <Navigation className="w-6 h-6 text-cyan-400" />
-                        <span className="text-[9px] font-black uppercase tracking-[0.2em] text-white/60">GPS Rota</span>
+                        <span className="text-[9px] font-black uppercase tracking-[0.2em] text-white">GPS Rota</span>
                      </button>
-                     <button className="bg-white/5 border border-white/10 rounded-2xl p-5 flex flex-col items-center justify-center gap-3 active:bg-cyan-500/20 active:border-cyan-500/50 transition-all backdrop-blur-md">
+                     <button className="bg-white/10 border border-white/20 rounded-2xl p-5 flex flex-col items-center justify-center gap-3 active:bg-cyan-500/30 active:border-cyan-500/60 transition-all backdrop-blur-xl shadow-lg">
                         <Clock className="w-6 h-6 text-cyan-400" />
-                        <span className="text-[9px] font-black uppercase tracking-[0.2em] text-white/60">Arrivo</span>
+                        <span className="text-[9px] font-black uppercase tracking-[0.2em] text-white">Chegada</span>
                      </button>
                   </div>
                 </div>
@@ -345,9 +347,9 @@ export const MobileApp: React.FC = () => {
                               <div className="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center">
                                 <item.icon className="w-4 h-4 text-cyan-500/60" />
                               </div>
-                              <span className="text-[11px] font-bold uppercase tracking-widest text-white/80">{item.label}</span>
+                              <span className="text-[11px] font-black uppercase tracking-widest text-white">{item.label}</span>
                            </div>
-                           <span className="text-[9px] font-black text-cyan-500/40 uppercase tracking-tighter">{item.status}</span>
+                           <span className="text-[9px] font-black text-cyan-400 uppercase tracking-tighter bg-cyan-500/10 px-2 py-0.5 rounded border border-cyan-500/20">{item.status}</span>
                         </div>
                       ))}
                    </div>
@@ -418,26 +420,26 @@ export const MobileApp: React.FC = () => {
       </main>
 
       {/* Navigation Bar */}
-      <nav className="h-20 bg-black/60 backdrop-blur-2xl border-t border-white/10 flex items-center justify-around px-4 shrink-0 relative z-20">
+      <nav className="h-20 bg-black/90 backdrop-blur-2xl border-t border-white/20 flex items-center justify-around px-4 shrink-0 relative z-20">
         <button 
           onClick={() => setActiveTab('home')}
-          className={`flex flex-col items-center gap-1.5 transition-all ${activeTab === 'home' ? 'text-cyan-400' : 'text-white/20'}`}
+          className={`flex flex-col items-center gap-1.5 transition-all ${activeTab === 'home' ? 'text-cyan-400' : 'text-white/40'}`}
         >
           <div className={`w-1 h-1 rounded-full bg-cyan-400 mb-1 absolute top-0 transition-opacity ${activeTab === 'home' ? 'opacity-100' : 'opacity-0'}`} />
           <Home className="w-6 h-6" />
-          <span className="text-[8px] font-black uppercase tracking-[0.2em]">Home</span>
+          <span className="text-[8px] font-black uppercase tracking-[0.2em]">Início</span>
         </button>
         <button 
           onClick={() => setActiveTab('active')}
-          className={`flex flex-col items-center gap-1.5 transition-all ${activeTab === 'active' ? 'text-cyan-400' : 'text-white/20'}`}
+          className={`flex flex-col items-center gap-1.5 transition-all ${activeTab === 'active' ? 'text-cyan-400' : 'text-white/40'}`}
         >
           <div className={`w-1 h-1 rounded-full bg-cyan-400 mb-1 absolute top-0 transition-opacity ${activeTab === 'active' ? 'opacity-100' : 'opacity-0'}`} />
           <Zap className="w-6 h-6" />
-          <span className="text-[8px] font-black uppercase tracking-[0.2em]">Ops</span>
+          <span className="text-[8px] font-black uppercase tracking-[0.2em]">Ativos</span>
         </button>
         <button 
           onClick={() => setActiveTab('maps')}
-          className={`flex flex-col items-center gap-1.5 transition-all ${activeTab === 'maps' ? 'text-cyan-400' : 'text-white/20'}`}
+          className={`flex flex-col items-center gap-1.5 transition-all ${activeTab === 'maps' ? 'text-cyan-400' : 'text-white/40'}`}
         >
           <div className={`w-1 h-1 rounded-full bg-cyan-400 mb-1 absolute top-0 transition-opacity ${activeTab === 'maps' ? 'opacity-100' : 'opacity-0'}`} />
           <MapIcon className="w-6 h-6" />
@@ -445,7 +447,7 @@ export const MobileApp: React.FC = () => {
         </button>
         <button 
           onClick={() => auth.signOut()}
-          className="flex flex-col items-center gap-1.5 text-white/20 active:text-red-500"
+          className="flex flex-col items-center gap-1.5 text-white/40 active:text-red-500"
         >
           <LogOut className="w-6 h-6" />
           <span className="text-[8px] font-black uppercase tracking-[0.2em]">Sair</span>
