@@ -6,7 +6,6 @@ import {
   Camera, 
   PenTool, 
   CheckCircle2, 
-  ArrowRight,
   Navigation,
   Clock,
   LogOut,
@@ -73,24 +72,52 @@ export const MobileApp: React.FC = () => {
         setSelectedOS(os);
         setActiveTab('active');
       }}
-      className="bg-black/40 border border-white/5 p-4 rounded-2xl mb-3 flex items-center gap-4 active:bg-cyan-500/10 active:border-cyan-500/30 transition-all backdrop-blur-md"
+      className="bg-white/[0.03] border border-white/10 p-5 rounded-3xl mb-4 flex items-center gap-5 active:bg-cyan-500/10 active:border-cyan-500/40 transition-all backdrop-blur-2xl relative overflow-hidden group shadow-lg"
     >
-      <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 shadow-lg ${
-        os.priority === 'high' ? 'bg-red-500/20 text-red-500' : 'bg-cyan-500/20 text-cyan-500'
+      <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/[0.02] to-transparent opacity-0 group-active:opacity-100 transition-opacity" />
+      
+      <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 shadow-2xl border relative z-10 ${
+        os.priority === 'high' 
+          ? 'bg-red-500/10 text-red-500 border-red-500/20' 
+          : 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20'
       }`}>
-        <ClipboardList className="w-6 h-6" />
+        <ClipboardList className="w-7 h-7" />
+        {os.priority === 'high' && (
+          <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-ping" />
+        )}
       </div>
-      <div className="flex-1 overflow-hidden">
-        <div className="flex justify-between items-start">
-           <span className="text-[10px] font-black text-white/40 uppercase tracking-widest">{os.id.slice(0, 8)}</span>
-           <span className="text-[9px] bg-cyan-500/10 text-cyan-400 px-2 py-0.5 rounded font-bold uppercase border border-cyan-500/20">{os.status}</span>
+
+      <div className="flex-1 overflow-hidden relative z-10">
+        <div className="flex justify-between items-center mb-1.5">
+           <span className="text-[9px] font-black text-cyan-500/50 uppercase tracking-[0.2em] font-mono">OS.{os.id.slice(0, 8).toUpperCase()}</span>
+           <div className="flex items-center gap-2">
+              <span className={`text-[8px] px-2 py-0.5 rounded-full font-black uppercase tracking-widest border ${
+                os.status === 'pending' ? 'bg-amber-500/10 text-amber-500 border-amber-500/20' : 'bg-green-500/10 text-green-500 border-green-500/20'
+              }`}>
+                {os.status}
+              </span>
+           </div>
         </div>
-        <h4 className="text-white font-bold text-sm truncate mt-1">{os.clientName || 'Cliente Indefinido'}</h4>
-        <p className="text-white/40 text-[10px] truncate flex items-center gap-1 mt-1 font-mono uppercase tracking-tighter">
-          <MapPin className="w-3 h-3 shrink-0 text-cyan-500" /> {os.address}
-        </p>
+        <h4 className="text-white font-black text-base truncate tracking-tight uppercase">{os.clientName || 'Cliente Indefinido'}</h4>
+        <div className="flex items-center gap-2 mt-2">
+          <div className="flex items-center gap-1.5 bg-white/5 px-2 py-1 rounded-lg border border-white/5">
+            <MapPin className="w-3 h-3 text-cyan-500" />
+            <p className="text-white/60 text-[9px] font-bold uppercase tracking-tighter truncate max-w-[120px]">
+              {os.address.split(',')[0]}
+            </p>
+          </div>
+          <div className="flex items-center gap-1.5 bg-white/5 px-2 py-1 rounded-lg border border-white/5">
+            <Clock className="w-3 h-3 text-cyan-500" />
+            <p className="text-white/60 text-[9px] font-bold uppercase tracking-tighter">
+              10:30
+            </p>
+          </div>
+        </div>
       </div>
-      <ChevronRight className="w-5 h-5 text-white/10" />
+      
+      <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/10 group-hover:bg-cyan-500 group-hover:text-black transition-all">
+        <ChevronRight className="w-5 h-5" />
+      </div>
     </motion.div>
   );
 
@@ -131,160 +158,138 @@ export const MobileApp: React.FC = () => {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              className="space-y-6"
+              className="space-y-8 pb-6"
             >
-              <div className="mb-8">
-                <h3 className="text-2xl font-black uppercase tracking-tighter text-white">Menu Principal</h3>
-                <p className="text-[10px] text-cyan-400/60 font-mono uppercase tracking-[0.3em] mt-1 font-bold">Painel de Controle Tático</p>
+              <div className="mb-6 px-1">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h3 className="text-3xl font-black uppercase tracking-tighter text-white leading-none">Command</h3>
+                    <p className="text-[10px] text-cyan-400 font-mono uppercase tracking-[0.4em] mt-1 font-black">Tactical Operations Hub</p>
+                  </div>
+                  <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
+                    <LayoutGrid className="w-5 h-5 text-cyan-500/60" />
+                  </div>
+                </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <motion.button
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setActiveTab('agenda')}
-                  className="bg-black/40 border border-white/10 p-6 rounded-3xl flex flex-col items-center gap-4 backdrop-blur-xl relative group overflow-hidden"
-                >
-                  <div className="absolute inset-0 bg-cyan-500/5 opacity-0 group-active:opacity-100 transition-opacity" />
-                  <div className="w-14 h-14 bg-cyan-500/20 rounded-2xl flex items-center justify-center text-cyan-400 shadow-[0_0_20px_rgba(6,182,212,0.2)]">
-                    <ClipboardList className="w-7 h-7" />
-                  </div>
-                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white">Minha Agenda</span>
-                  <div className="absolute top-2 right-2 flex items-center justify-center">
-                    <div className="w-5 h-5 bg-cyan-500 rounded-full text-[10px] font-black flex items-center justify-center text-black">
-                      {orders.filter(o => o.status !== 'finished').length}
-                    </div>
-                  </div>
-                </motion.button>
-
+              {/* Bento Grid Menu */}
+              <div className="grid grid-cols-2 gap-4 px-1">
                 <motion.button
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setActiveTab('maps')}
-                  className="bg-black/40 border border-white/10 p-6 rounded-3xl flex flex-col items-center gap-4 backdrop-blur-xl relative group overflow-hidden"
+                  className="bg-white/5 border border-cyan-500/30 p-6 rounded-[2.5rem] flex flex-col items-center gap-4 backdrop-blur-2xl relative group overflow-hidden h-40 justify-center shadow-[0_0_20px_rgba(6,182,212,0.1)]"
                 >
-                  <div className="absolute inset-0 bg-cyan-500/5 opacity-0 group-active:opacity-100 transition-opacity" />
-                  <div className="w-14 h-14 bg-cyan-500/20 rounded-2xl flex items-center justify-center text-cyan-400 shadow-[0_0_20px_rgba(6,182,212,0.2)]">
+                  <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="w-14 h-14 bg-cyan-500/20 rounded-2xl flex items-center justify-center text-cyan-400 shadow-[0_0_20px_rgba(6,182,212,0.2)] border border-cyan-500/30 relative z-10">
                     <MapIcon className="w-7 h-7" />
                   </div>
-                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white">Mapa Tático</span>
+                  <div className="text-center relative z-10">
+                    <span className="text-[11px] font-black uppercase tracking-[0.2em] text-white">Mapa Tático</span>
+                    <p className="text-[8px] text-cyan-500/50 uppercase mt-1 tracking-widest font-bold">Rotas em Tempo Real</p>
+                  </div>
                 </motion.button>
 
                 <motion.button
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setActiveTab('active')}
-                  className="bg-black/40 border border-white/10 p-6 rounded-3xl flex flex-col items-center gap-4 backdrop-blur-xl relative group overflow-hidden"
+                  className="bg-white/5 border border-cyan-500/30 p-6 rounded-[2.5rem] flex flex-col items-center gap-4 backdrop-blur-2xl relative group overflow-hidden h-40 justify-center shadow-[0_0_20px_rgba(6,182,212,0.1)]"
                 >
-                  <div className="absolute inset-0 bg-cyan-500/5 opacity-0 group-active:opacity-100 transition-opacity" />
-                  <div className="w-14 h-14 bg-cyan-500/20 rounded-2xl flex items-center justify-center text-cyan-400 shadow-[0_0_20px_rgba(6,182,212,0.2)]">
+                  <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="w-14 h-14 bg-cyan-500/20 rounded-2xl flex items-center justify-center text-cyan-400 shadow-[0_0_20px_rgba(6,182,212,0.2)] border border-cyan-500/30 relative z-10">
                     <Zap className="w-7 h-7" />
                   </div>
-                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white">Active Ops</span>
-                </motion.button>
-
-                <motion.button
-                  whileTap={{ scale: 0.95 }}
-                  className="bg-black/40 border border-white/10 p-6 rounded-3xl flex flex-col items-center gap-4 backdrop-blur-xl opacity-40 relative overflow-hidden"
-                >
-                  <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center text-white/40">
-                    <Camera className="w-7 h-7" />
+                  <div className="text-center relative z-10">
+                    <span className="text-[11px] font-black uppercase tracking-[0.2em] text-white">Active Ops</span>
+                    <p className="text-[8px] text-cyan-500/50 uppercase mt-1 tracking-widest font-bold">Intervenção Rápida</p>
                   </div>
-                  <span className="text-[8px] font-black uppercase tracking-[0.2em] text-white/40">Inventário</span>
                 </motion.button>
               </div>
 
-              {/* Status Bar */}
-              <div className="mt-8 bg-cyan-500/5 border border-cyan-500/20 p-5 rounded-2xl backdrop-blur-md">
-                <div className="flex justify-between items-center mb-4">
-                  <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-cyan-400">Status do Sistema</h4>
-                  <span className="text-[9px] font-mono text-cyan-500/60 uppercase">v1.4.2 stable</span>
-                </div>
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center text-[10px]">
-                    <span className="text-white/40 uppercase tracking-widest font-bold">Conexão Backend</span>
-                    <span className="text-green-500 font-black uppercase">Online</span>
+              {/* Integrated Agenda Module */}
+              <div className="pt-8 border-t border-white/5">
+                <div className="flex justify-between items-end mb-8 px-2">
+                  <div>
+                    <h4 className="text-2xl font-black uppercase tracking-tight text-white leading-none">Minha Agenda</h4>
+                    <p className="text-[10px] text-cyan-400 font-mono uppercase tracking-[0.4em] font-black mt-2">Protocolos Estratégicos</p>
                   </div>
-                  <div className="flex justify-between items-center text-[10px]">
-                    <span className="text-white/40 uppercase tracking-widest font-bold">Carga de Bateria</span>
-                    <span className="text-white font-black uppercase">94%</span>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          )}
-
-          {activeTab === 'agenda' && (
-            <motion.div
-              key="agenda"
-              initial={{ opacity: 0, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 1.02 }}
-              className="h-full flex flex-col pt-4"
-            >
-              <div className="mb-12 px-1">
-                <h3 className="text-4xl font-black uppercase tracking-[-0.05em] text-white leading-none mb-2">Minha Agenda</h3>
-                <p className="text-[10px] text-cyan-400 font-mono uppercase tracking-[0.4em] font-black">Estratégia Técnica de Campo</p>
-              </div>
-
-              <div className="flex-1 flex flex-col items-center justify-center relative -mt-20">
-                {/* Decorative Tactical Frame */}
-                <div className="absolute w-64 h-64 border border-white/10 rounded-lg pointer-events-none opacity-40">
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#050505] px-4">
-                    <div className="w-1 h-1 bg-cyan-500 rounded-full" />
+                  <div className="text-right">
+                    <p className="text-3xl font-black text-white leading-none drop-shadow-[0_0_10px_rgba(6,182,212,0.5)]">{orders.filter(o => o.status !== 'finished').length}</p>
+                    <p className="text-[9px] text-cyan-400 font-black uppercase tracking-tighter mt-1">Ativos</p>
                   </div>
                 </div>
 
-                <div className="py-24 flex flex-col items-center justify-center text-center px-8 relative overflow-hidden">
-                  <div className="absolute inset-0 bg-cyan-500/5 blur-[120px] pointer-events-none" />
-                  <div className="relative">
-                    <motion.div
-                      animate={{ 
-                        scale: [1, 1.05, 1],
-                        rotate: 360
-                      }}
-                      transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
-                      className="w-32 h-32 bg-white rounded-full flex items-center justify-center mb-10 shadow-[0_0_60px_rgba(34,211,238,0.2)] p-4 overflow-hidden border-2 border-cyan-500/20"
-                    >
-                      <img src="/logo_one.png" alt="Paraíso ONE" className="w-full h-full object-contain" />
-                    </motion.div>
-                    
-                    {/* Orbitals */}
-                    <motion.div 
-                      animate={{ rotate: -360 }}
-                      transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-                      className="absolute inset-0 -m-4 border border-cyan-500/10 rounded-full pointer-events-none"
-                    />
-                  </div>
+                <div className="flex flex-col items-center justify-center py-12 relative mb-10 overflow-hidden rounded-[3rem] bg-gradient-to-b from-white/[0.02] to-transparent border border-white/5">
+                  <div className="absolute inset-0 bg-cyan-500/5 blur-[80px] pointer-events-none" />
+                  <div className="absolute w-56 h-56 border border-cyan-500/10 rounded-full pointer-events-none" />
+                  <div className="absolute w-44 h-44 border border-cyan-500/10 rounded-full pointer-events-none animate-pulse" />
                   
-                  <div className="mt-4">
-                    <h4 className="text-white font-black uppercase tracking-[0.6em] text-[11px] mb-3 cyan-text-glow">Sincronizando Agenda</h4>
-                    <p className="text-cyan-400/40 text-[8px] font-mono uppercase tracking-[0.5em] animate-pulse">Acessando Nucleo de Operações</p>
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                    className="w-28 h-28 bg-white rounded-full flex items-center justify-center shadow-[0_0_50px_rgba(34,211,238,0.3)] p-4 overflow-hidden border-4 border-cyan-500/20 relative z-10"
+                  >
+                    <img src="/logo_one.png" alt="Paraíso ONE" className="w-full h-full object-contain" />
+                  </motion.div>
+                  
+                  <div className="mt-6 text-center relative z-10">
+                    <p className="text-white font-black tracking-[0.6em] uppercase text-[10px] mb-2 cyan-text-glow">Syncing tactical nodes</p>
+                    <div className="flex items-center justify-center gap-1">
+                       {[...Array(3)].map((_, i) => (
+                         <motion.div 
+                           key={i}
+                           animate={{ opacity: [0.2, 1, 0.2] }}
+                           transition={{ duration: 1.5, delay: i * 0.3, repeat: Infinity }}
+                           className="w-1 h-1 bg-cyan-500 rounded-full"
+                         />
+                       ))}
+                    </div>
                   </div>
                 </div>
+
+                {isInitialLoading ? (
+                   <div className="py-12 flex flex-col items-center justify-center gap-4">
+                      <div className="w-10 h-10 border-4 border-cyan-500/20 border-t-cyan-500 rounded-full animate-spin shadow-[0_0_15px_rgba(6,182,212,0.2)]" />
+                      <p className="text-[10px] font-black text-cyan-400 uppercase tracking-[0.4em] animate-pulse">Estabelecendo Conexão Secura</p>
+                   </div>
+                ) : orders.length === 0 ? (
+                  <div className="py-16 flex flex-col items-center justify-center opacity-40 text-center px-10 border border-dashed border-cyan-500/30 rounded-[2.5rem] bg-cyan-500/5">
+                    <AlertCircle className="w-10 h-10 mb-4 text-cyan-500" />
+                    <p className="text-[10px] font-black uppercase tracking-[0.4em] text-white">Nenhuma Ordem de Serviço Detectada</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {orders.map(os => <OSCard key={os.id} os={os} />)}
+                  </div>
+                )}
               </div>
 
-              {/* Quick Actions (Floating) */}
-              <div className="absolute bottom-24 right-6">
-                <motion.button 
-                  whileTap={{ scale: 0.9 }}
-                  onClick={handleSmartRoute}
-                  disabled={isOptimizing || orders.length === 0}
-                  className="bg-cyan-500 w-14 h-14 rounded-full flex items-center justify-center text-black shadow-[0_0_30px_rgba(6,182,212,0.5)] active:bg-cyan-400 transition-all disabled:opacity-30 relative z-30"
-                >
-                  <RouteIcon className={`w-7 h-7 ${isOptimizing ? 'animate-spin' : ''}`} />
-                </motion.button>
-              </div>
-
-              {/* Show list icon if already loaded */}
-              {!isInitialLoading && orders.length > 0 && (
-                <div className="mt-auto pb-4 space-y-3">
-                   {orders.slice(0, 1).map(os => <OSCard key={os.id} os={os} />)}
-                   <button 
-                     onClick={() => setIsInitialLoading(true)} // Toggle back to loading screen for demo
-                     className="w-full py-3 text-[10px] font-black uppercase tracking-[0.3em] text-white/20 border border-white/5 rounded-2xl hover:bg-white/5 transition-all"
-                   >
-                     Ver Todos os Protocolos ({orders.length})
-                   </button>
+              {/* System Diagnostics Module */}
+              <div className="bg-gradient-to-br from-cyan-500/10 to-transparent border border-cyan-500/20 p-6 rounded-[2.5rem] backdrop-blur-md relative overflow-hidden">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_#22c55e]" />
+                  <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-white">Integridade do Sistema</h4>
                 </div>
-              )}
+
+                <div className="grid grid-cols-2 gap-6">
+                  <div className="space-y-1">
+                    <p className="text-[9px] text-white/40 uppercase tracking-widest font-bold">Base de Dados</p>
+                    <p className="text-xs font-black text-white">Sincronizado</p>
+                  </div>
+                  <div className="space-y-1 text-right">
+                    <p className="text-[9px] text-white/40 uppercase tracking-widest font-bold">Conectividade</p>
+                    <p className="text-xs font-black text-green-500 uppercase">Estável</p>
+                  </div>
+                </div>
+
+                <div className="mt-6 h-1 w-full bg-white/5 rounded-full overflow-hidden">
+                   <motion.div 
+                    initial={{ width: 0 }}
+                    animate={{ width: '94%' }}
+                    transition={{ duration: 1.5 }}
+                    className="h-full bg-cyan-500 shadow-[0_0_10px_#06b6d4]"
+                   />
+                </div>
+              </div>
             </motion.div>
           )}
 
@@ -296,7 +301,7 @@ export const MobileApp: React.FC = () => {
                className="h-full flex flex-col"
              >
                 <button 
-                  onClick={() => setActiveTab('agenda')}
+                  onClick={() => setActiveTab('home')}
                   className="mb-6 flex items-center gap-2 text-white/30 text-[10px] font-black uppercase tracking-[0.3em] hover:text-white transition-colors"
                 >
                   <ChevronRight className="w-4 h-4 rotate-180" /> Voltar para lista
@@ -421,14 +426,6 @@ export const MobileApp: React.FC = () => {
           <div className={`w-1 h-1 rounded-full bg-cyan-400 mb-1 absolute top-0 transition-opacity ${activeTab === 'home' ? 'opacity-100' : 'opacity-0'}`} />
           <Home className="w-6 h-6" />
           <span className="text-[8px] font-black uppercase tracking-[0.2em]">Home</span>
-        </button>
-        <button 
-          onClick={() => setActiveTab('agenda')}
-          className={`flex flex-col items-center gap-1.5 transition-all ${activeTab === 'agenda' ? 'text-cyan-400' : 'text-white/20'}`}
-        >
-          <div className={`w-1 h-1 rounded-full bg-cyan-400 mb-1 absolute top-0 transition-opacity ${activeTab === 'agenda' ? 'opacity-100' : 'opacity-0'}`} />
-          <ClipboardList className="w-6 h-6" />
-          <span className="text-[8px] font-black uppercase tracking-[0.2em]">Agenda</span>
         </button>
         <button 
           onClick={() => setActiveTab('active')}

@@ -55,7 +55,7 @@ export const CinematicIntro: React.FC = () => {
                     x: (Math.random() - 0.5) * 1200, 
                     y: (Math.random() - 0.5) * 800,
                     scale: [0, 1.5, 0],
-                    opacity: [0, 0.8, 0]
+                    opacity: [0, 1, 0]
                   }}
                   transition={{ 
                     duration: 1.5, 
@@ -63,21 +63,21 @@ export const CinematicIntro: React.FC = () => {
                     delay: Math.random() * 0.5,
                     ease: "easeOut"
                   }}
-                  className="absolute w-1 h-1 bg-cyan-400 rounded-full shadow-[0_0_15px_#22d3ee]"
+                  className="absolute w-1.5 h-1.5 bg-cyan-400 rounded-full shadow-[0_0_20px_#22d3ee]"
                 />
               ))}
-              <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-40">
+              <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-60">
                 <motion.circle 
                   cx="50%" cy="50%" r="0"
-                  animate={{ r: [0, 600], opacity: [0.5, 0] }}
+                  animate={{ r: [0, 700], opacity: [0.8, 0] }}
                   transition={{ duration: 2, repeat: Infinity, ease: "easeOut" }}
                   stroke="#22d3ee"
-                  strokeWidth="1"
+                  strokeWidth="2"
                   fill="none"
                 />
                 <motion.circle 
                   cx="50%" cy="50%" r="0"
-                  animate={{ r: [0, 400], opacity: [0.3, 0] }}
+                  animate={{ r: [0, 500], opacity: [0.6, 0] }}
                   transition={{ duration: 2, delay: 0.5, repeat: Infinity, ease: "easeOut" }}
                   stroke="#22d3ee"
                   strokeWidth="1"
@@ -86,10 +86,10 @@ export const CinematicIntro: React.FC = () => {
               </svg>
               <motion.div
                 initial={{ scale: 0 }}
-                animate={{ scale: [0, 1.2, 1] }}
+                animate={{ scale: [0, 1.5, 1.2] }}
                 className="absolute inset-0 flex items-center justify-center"
               >
-                <div className="w-40 h-40 bg-cyan-500/10 rounded-full blur-3xl" />
+                <div className="w-60 h-60 bg-cyan-500/20 rounded-full blur-[100px]" />
               </motion.div>
             </div>
           </motion.div>
@@ -103,61 +103,68 @@ export const CinematicIntro: React.FC = () => {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 1.5, filter: 'blur(30px)' }}
             transition={{ duration: 0.5 }}
-            className="absolute inset-0 flex items-center justify-center overflow-hidden"
+            className="absolute inset-0 flex flex-col items-center justify-center overflow-hidden"
           >
-            <div className="w-full max-w-4xl grid grid-cols-3 gap-6 p-10 relative">
+            <div className="w-full max-w-lg grid grid-cols-2 gap-4 p-6 relative z-10">
               {/* HUD Elements */}
-              {[...Array(6)].map((_, i) => (
+              {[
+                { icon: Globe, label: 'Global Network', sub: 'Satellite Uplink' },
+                { icon: Shield, label: 'Security Firewall', sub: 'Zero-Trust Protocol' },
+                { icon: Target, label: 'Asset Tracking', sub: 'GPS Precision' },
+                { icon: Cpu, label: 'Core Processor', sub: 'Tactical Kernel' },
+                { icon: Activity, label: 'Biometrics', sub: 'Status Monitoring' },
+                { icon: Database, label: 'Secure Storage', sub: 'Encrypted Vault' }
+              ].map((item, i) => (
                 <motion.div
                   key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, x: i % 2 === 0 ? -20 : 20 }}
+                  animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.1 }}
-                  className="bg-cyan-500/5 border border-cyan-500/20 p-6 rounded-2xl backdrop-blur-sm relative overflow-hidden group"
+                  className="bg-black/60 border border-cyan-500/30 p-5 rounded-2xl backdrop-blur-xl relative overflow-hidden group shadow-[0_0_20px_rgba(6,182,212,0.1)]"
                 >
-                  <div className="absolute top-0 right-0 p-2">
-                    <Activity className="w-3 h-3 text-cyan-500/40" />
+                  <div className="absolute top-0 right-0 p-3">
+                    <Activity className="w-3 h-3 text-cyan-500/20" />
                   </div>
-                  <div className="w-10 h-10 rounded-lg bg-cyan-500/20 flex items-center justify-center mb-4">
-                    {i === 0 && <Globe className="w-5 h-5 text-cyan-400" />}
-                    {i === 1 && <Shield className="w-5 h-5 text-cyan-400" />}
-                    {i === 2 && <Target className="w-5 h-5 text-cyan-400" />}
-                    {i === 3 && <Cpu className="w-5 h-5 text-cyan-400" />}
-                    {i === 4 && <Activity className="w-5 h-5 text-cyan-400" />}
-                    {i === 5 && <Database className="w-5 h-5 text-cyan-400" />}
+                  
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center border border-cyan-500/20 shadow-[inset_0_0_15px_rgba(6,182,212,0.1)]">
+                      <item.icon className="w-6 h-6 text-cyan-400" />
+                    </div>
+                    <div>
+                      <h4 className="text-[10px] font-black text-white uppercase tracking-widest">{item.label}</h4>
+                      <p className="text-[7px] text-cyan-500/60 font-mono uppercase tracking-[0.2em]">{item.sub}</p>
+                    </div>
                   </div>
-                  <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
-                    <motion.div 
-                      animate={{ x: [-100, 200] }}
-                      transition={{ duration: 1.5, repeat: Infinity }}
-                      className="w-1/2 h-full bg-cyan-500/40"
-                    />
-                  </div>
-                  <div className="mt-4 flex gap-1">
-                    {[...Array(4)].map((_, j) => (
-                      <div key={j} className="w-1.5 h-1.5 bg-cyan-500/40 rounded-full" />
-                    ))}
+
+                  <div className="flex items-center gap-3">
+                    <div className="h-1 flex-1 bg-white/5 rounded-full overflow-hidden">
+                      <motion.div 
+                        initial={{ width: 0 }}
+                        animate={{ width: '100%' }}
+                        transition={{ duration: 1.5, delay: i * 0.2 }}
+                        className="h-full bg-gradient-to-r from-cyan-600 to-cyan-400 shadow-[0_0_8px_#06b6d4]"
+                      />
+                    </div>
+                    <span className="text-[8px] font-mono text-cyan-500/40">v2.4</span>
                   </div>
                 </motion.div>
               ))}
-              
-              {/* Tactical Grid Background */}
-              <div className="absolute inset-0 tech-grid opacity-10 pointer-events-none -z-10" />
-              <motion.div 
-                animate={{ 
-                  rotate: [0, 360],
-                }}
-                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] border border-cyan-500/10 rounded-full pointer-events-none"
-              >
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2 h-2 bg-cyan-500 rounded-full shadow-[0_0_15px_#22d3ee]" />
-              </motion.div>
             </div>
             
-            <div className="absolute bottom-10 left-1/2 -translate-x-1/2">
-              <h3 className="text-[10px] font-mono text-cyan-500 uppercase tracking-[1em] font-black animate-pulse">
-                Sincronizando Nodes Operacionais
-              </h3>
+            {/* Tactical Grid Background */}
+            <div className="absolute inset-0 tech-grid opacity-20 pointer-events-none" />
+            
+            <div className="absolute bottom-16 left-1/2 -translate-x-1/2 text-center w-full">
+              <div className="flex items-center justify-center gap-4 mb-4">
+                <div className="w-12 h-[1px] bg-gradient-to-r from-transparent to-cyan-500" />
+                <h3 className="text-[11px] font-black text-white uppercase tracking-[0.8em] cyan-text-glow">
+                  Sincronizando Nodes
+                </h3>
+                <div className="w-12 h-[1px] bg-gradient-to-l from-transparent to-cyan-500" />
+              </div>
+              <p className="text-[8px] font-mono text-cyan-500/40 uppercase tracking-[0.4em] animate-pulse">
+                Establishing military-grade connection
+              </p>
             </div>
           </motion.div>
         )}
@@ -169,17 +176,17 @@ export const CinematicIntro: React.FC = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 flex flex-col items-center justify-center p-6"
+            className="absolute inset-0 flex flex-col items-center justify-center p-6 bg-radial-gradient from-cyan-900/20 to-transparent"
           >
             {/* Energy Convergence Flux */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
-              {[...Array(10)].map((_, i) => (
+              {[...Array(15)].map((_, i) => (
                 <motion.div
                   key={i}
-                  initial={{ x: i % 2 === 0 ? -1000 : 1000, y: (Math.random() - 0.5) * 500 }}
-                  animate={{ x: 0, y: 0, opacity: [0, 1, 0], scale: [1, 0.5, 0] }}
-                  transition={{ duration: 1, ease: "circIn" }}
-                  className="absolute w-40 h-[1px] bg-gradient-to-r from-transparent via-cyan-500 to-transparent blur-[2px]"
+                  initial={{ x: i % 2 === 0 ? -1000 : 1000, y: (Math.random() - 0.5) * 800 }}
+                  animate={{ x: 0, y: 0, opacity: [0, 1, 0], scale: [1, 0.8, 0] }}
+                  transition={{ duration: 0.8, ease: "circIn", delay: Math.random() * 0.5 }}
+                  className="absolute w-80 h-[2px] bg-gradient-to-r from-transparent via-cyan-400 to-transparent blur-[1px]"
                 />
               ))}
             </div>
@@ -190,14 +197,14 @@ export const CinematicIntro: React.FC = () => {
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
               className="relative mb-12"
             >
-              <div className="absolute inset-0 bg-cyan-500/20 blur-[100px] rounded-full" />
-              <div className="w-48 h-48 bg-white rounded-full flex items-center justify-center p-4 relative z-10 shadow-[0_0_80px_rgba(34,211,238,0.4)] overflow-hidden border-2 border-cyan-500/20">
+              <div className="absolute inset-0 bg-cyan-400/40 blur-[120px] rounded-full" />
+              <div className="w-56 h-56 bg-white rounded-full flex items-center justify-center p-6 relative z-10 shadow-[0_0_100px_rgba(34,211,238,0.6)] overflow-hidden border-[6px] border-cyan-500/30">
                 <img src="/logo_one.png" alt="Paraíso ONE" className="w-full h-full object-contain" />
                 {/* Metallic Gleam */}
                 <motion.div 
-                  animate={{ x: [-200, 200], skewX: [-20, -20] }}
-                  transition={{ duration: 1, delay: 0.5, ease: "easeInOut" }}
-                  className="absolute inset-y-0 w-12 bg-white/40 blur-xl"
+                  animate={{ x: [-300, 300], skewX: [-25, -25] }}
+                  transition={{ duration: 1.2, delay: 0.5, repeat: Infinity, repeatDelay: 2 }}
+                  className="absolute inset-y-0 w-20 bg-white/60 blur-2xl"
                 />
               </div>
             </motion.div>
@@ -208,15 +215,15 @@ export const CinematicIntro: React.FC = () => {
               transition={{ delay: 0.4, duration: 0.6 }}
               className="text-center"
             >
-              <h1 className="text-7xl font-black tracking-[-0.05em] text-white flex items-center justify-center gap-4">
+              <h1 className="text-8xl font-black tracking-[-0.05em] text-white flex items-center justify-center gap-6">
                 <span>PARAÍSO</span>
-                <span className="text-cyan-500 relative">
+                <span className="text-cyan-400 relative drop-shadow-[0_0_30px_rgba(34,211,238,0.5)]">
                   ONE
                   <motion.div 
                     initial={{ width: 0 }}
                     animate={{ width: '100%' }}
                     transition={{ delay: 1, duration: 0.8 }}
-                    className="absolute -bottom-2 left-0 h-1 bg-cyan-500 shadow-[0_0_15px_#22d3ee]"
+                    className="absolute -bottom-3 left-0 h-2 bg-gradient-to-r from-cyan-400 to-cyan-600 shadow-[0_0_20px_#22d3ee]"
                   />
                 </span>
               </h1>
