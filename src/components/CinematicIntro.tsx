@@ -9,20 +9,185 @@ export const CinematicIntro: React.FC = () => {
 
   useEffect(() => {
     const timers = [
-      setTimeout(() => setStep(1), 2000), // Explosion to Glimpse
-      setTimeout(() => setStep(2), 4000), // Glimpse to Reveal
-      setTimeout(() => setStep(3), 6000), // Reveal to Signature
-      setTimeout(() => setCinematicFinished(true), 8500),
+      setTimeout(() => setStep(1), 1500), // Explosion to Globe Tracking
+      setTimeout(() => setStep(2), 5500), // Globe Tracking to Logo Reveal
+      setTimeout(() => setStep(3), 8500), // Reveal to Final Signature
+      setTimeout(() => setCinematicFinished(true), 11500),
     ];
     return () => timers.forEach(clearTimeout);
   }, [setCinematicFinished]);
 
+  const GlobeZoom = () => (
+    <motion.div 
+      key="globe-zoom"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0, scale: 2 }}
+      className="absolute inset-0 flex items-center justify-center overflow-hidden"
+    >
+      <div className="relative w-full h-full flex items-center justify-center">
+        {/* Satellites and Beams */}
+        <div className="absolute inset-0 pointer-events-none">
+          {[...Array(3)].map((_, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="absolute w-full h-full"
+            >
+              <motion.div
+                animate={{ 
+                  rotate: [0, 360],
+                  scale: [1, 1.1, 1]
+                }}
+                transition={{ duration: 10 + i * 2, repeat: Infinity, ease: "linear" }}
+                className="absolute inset-x-0 h-full flex items-start justify-center"
+              >
+                <div className="mt-20 flex flex-col items-center">
+                   <div className="relative">
+                     <motion.div 
+                        animate={{ opacity: [0.2, 0.8, 0.2] }}
+                        transition={{ duration: 1.5, repeat: Infinity }}
+                        className="absolute -inset-4 border border-cyan-400 rounded-full" 
+                     />
+                     <Globe className="w-10 h-10 text-cyan-400 drop-shadow-[0_0_10px_#22d3ee]" />
+                   </div>
+                   {/* GPS Beam */}
+                   <motion.div 
+                      initial={{ height: 0 }}
+                      animate={{ height: '400px' }}
+                      transition={{ duration: 1, delay: 0.5 }}
+                      className="w-[2px] bg-gradient-to-b from-cyan-400 to-transparent blur-[1px] relative opacity-40"
+                   >
+                     <motion.div 
+                        animate={{ y: [0, 400] }}
+                        transition={{ duration: 0.5, repeat: Infinity, ease: "linear" }}
+                        className="absolute top-0 left-0 w-full h-10 bg-white"
+                     />
+                   </motion.div>
+                </div>
+              </motion.div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* The Globe Zoom Sequence */}
+        <motion.div
+          animate={{
+            scale: [1, 1.5, 4, 12],
+            x: [0, 0, -100, -450],
+            y: [0, 0, 50, 200]
+          }}
+          transition={{
+            duration: 4,
+            times: [0, 0.4, 0.7, 1],
+            ease: "easeInOut"
+          }}
+          className="relative w-[600px] h-[600px] flex items-center justify-center"
+        >
+          {/* External Halo */}
+          <div className="absolute inset-0 border border-cyan-500/20 rounded-full animate-pulse" />
+          <div className="absolute -inset-10 border border-cyan-500/10 rounded-full border-dashed" />
+          
+          {/* Earth Mockup (Stylized) */}
+          <div className="w-[500px] h-[500px] rounded-full bg-black border-2 border-cyan-500/40 relative overflow-hidden shadow-[inset_0_0_80px_rgba(6,182,212,0.5)]">
+            {/* Map Grids */}
+            <div className="absolute inset-0 tech-grid opacity-40" />
+            
+            {/* Earth Rotation Simulation */}
+            <motion.div
+              animate={{ x: [-1000, 0] }}
+              transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+              className="absolute inset-y-0 w-[2000px] flex"
+            >
+               <div className="w-full h-full bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20" />
+            </motion.div>
+
+            {/* Random Nodes across the globe */}
+            {[...Array(12)].map((_, j) => (
+              <motion.div
+                key={j}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: [0.2, 0.8, 0.2] }}
+                transition={{ duration: 2, delay: j * 0.3, repeat: Infinity }}
+                style={{ 
+                  top: `${20 + Math.random() * 60}%`, 
+                  left: `${10 + Math.random() * 80}%` 
+                }}
+                className="absolute w-1 h-1 bg-cyan-400 rounded-full shadow-[0_0_5px_#22d3ee]"
+              />
+            ))}
+
+            {/* Target Point: South America / Brazil / SSP */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 2.5 }}
+              className="absolute top-[60%] left-[32%] w-4 h-4"
+            >
+              <div className="relative">
+                <motion.div 
+                  animate={{ scale: [1, 3], opacity: [1, 0] }}
+                  transition={{ repeat: Infinity, duration: 1.5 }}
+                  className="absolute inset-0 bg-white rounded-full"
+                />
+                <div className="w-2 h-2 bg-white rounded-full shadow-[0_0_10px_#fff]" />
+                
+                {/* Location Tag */}
+                <motion.div
+                   initial={{ opacity: 0, x: 10 }}
+                   animate={{ opacity: 1, x: 20 }}
+                   transition={{ delay: 3 }}
+                   className="absolute whitespace-nowrap"
+                >
+                  <p className="text-[10px] font-black text-cyan-400 uppercase tracking-widest bg-black/80 px-2 py-1 rounded border border-cyan-400/30">
+                    S. S. DO PARAÍSO, MG
+                  </p>
+                  <p className="text-[7px] font-mono text-white/60 mt-1">CEP: 37950-000</p>
+                </motion.div>
+              </div>
+            </motion.div>
+          </div>
+        </motion.div>
+
+        {/* HUD Overlay Elements */}
+        <div className="absolute bottom-10 left-10 text-left border-l-2 border-cyan-500/30 pl-4">
+           <h4 className="text-[10px] font-mono text-cyan-400 uppercase tracking-widest mb-1">Rastreamento de Ativos</h4>
+           <div className="flex gap-2">
+              <div className="w-1 h-3 bg-cyan-500" />
+              <div className="w-1 h-3 bg-cyan-500/50" />
+              <div className="w-1 h-3 bg-cyan-500/20" />
+           </div>
+        </div>
+
+        <div className="absolute top-10 right-10 text-right">
+           <p className="text-[14px] font-black text-white uppercase tracking-[0.5em] mb-2 drop-shadow-lg">Sincronização Global</p>
+           <div className="h-1 w-32 bg-white/10 rounded-full overflow-hidden">
+              <motion.div 
+                animate={{ x: [-128, 128] }}
+                transition={{ duration: 2, repeat: Infinity }}
+                className="w-1/2 h-full bg-cyan-400 shadow-[0_0_15px_#22d3ee]"
+              />
+           </div>
+        </div>
+
+        <div className="absolute bottom-20 text-center w-full">
+           <motion.p 
+             initial={{ opacity: 0 }}
+             animate={{ opacity: 1 }}
+             className="text-[9px] font-black text-cyan-400 uppercase tracking-[1em] animate-pulse"
+           >
+             Estabelecendo Conexão Orbital
+           </motion.p>
+        </div>
+      </div>
+    </motion.div>
+  );
+
   return (
     <div className="fixed inset-0 bg-[#020202] overflow-hidden z-[100] flex items-center justify-center font-sans">
-      {/* Background Deep Space */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(6,182,212,0.15)_0%,transparent_70%)] opacity-30" />
       
-      {/* Skip Button */}
       <button 
         onClick={() => setCinematicFinished(true)}
         className="fixed top-6 right-6 z-[110] bg-white/10 hover:bg-white/20 px-5 py-2.5 rounded-full border border-white/30 text-[10px] uppercase tracking-[0.3em] text-white font-black transition-all backdrop-blur-xl shadow-[0_0_20px_rgba(255,255,255,0.1)]"
@@ -31,7 +196,6 @@ export const CinematicIntro: React.FC = () => {
       </button>
 
       <AnimatePresence mode="wait">
-        {/* STEP 0: Data Explosion (0-2s) */}
         {step === 0 && (
           <motion.div 
             key="step0"
@@ -42,134 +206,39 @@ export const CinematicIntro: React.FC = () => {
             className="absolute inset-0 flex items-center justify-center"
           >
             <div className="relative w-full h-full">
-              {[...Array(40)].map((_, i) => (
+              {[...Array(50)].map((_, i) => (
                 <motion.div
                   key={i}
-                  initial={{ 
-                    x: 0, 
-                    y: 0, 
-                    scale: 0,
-                    opacity: 0 
-                  }}
+                  initial={{ x: 0, y: 0, scale: 0, opacity: 0 }}
                   animate={{ 
-                    x: (Math.random() - 0.5) * 1200, 
-                    y: (Math.random() - 0.5) * 800,
-                    scale: [0, 1.5, 0],
+                    x: (Math.random() - 0.5) * 1400, 
+                    y: (Math.random() - 0.5) * 1000,
+                    scale: [0, 2, 0],
                     opacity: [0, 1, 0]
                   }}
-                  transition={{ 
-                    duration: 1.5, 
-                    repeat: Infinity,
-                    delay: Math.random() * 0.5,
-                    ease: "easeOut"
-                  }}
-                  className="absolute w-1.5 h-1.5 bg-cyan-400 rounded-full shadow-[0_0_20px_#22d3ee]"
+                  transition={{ duration: 1.5, repeat: Infinity, delay: Math.random() * 0.5 }}
+                  className="absolute w-1.5 h-1.5 bg-white rounded-full shadow-[0_0_15px_#fff]"
                 />
               ))}
-              <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-60">
+              <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-80">
                 <motion.circle 
                   cx="50%" cy="50%" r="0"
-                  animate={{ r: [0, 700], opacity: [0.8, 0] }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "easeOut" }}
-                  stroke="#22d3ee"
-                  strokeWidth="2"
-                  fill="none"
-                />
-                <motion.circle 
-                  cx="50%" cy="50%" r="0"
-                  animate={{ r: [0, 500], opacity: [0.6, 0] }}
-                  transition={{ duration: 2, delay: 0.5, repeat: Infinity, ease: "easeOut" }}
-                  stroke="#22d3ee"
-                  strokeWidth="1"
+                  animate={{ r: [0, 800], opacity: [1, 0] }}
+                  transition={{ duration: 1.5, repeat: Infinity }}
+                  stroke="#fff"
+                  strokeWidth="3"
                   fill="none"
                 />
               </svg>
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: [0, 1.5, 1.2] }}
-                className="absolute inset-0 flex items-center justify-center"
-              >
-                <div className="w-60 h-60 bg-cyan-500/20 rounded-full blur-[100px]" />
-              </motion.div>
-            </div>
-          </motion.div>
-        )}
-
-        {/* STEP 1: Operational Glimpse (2-4s) */}
-        {step === 1 && (
-          <motion.div 
-            key="step1"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 1.5, filter: 'blur(30px)' }}
-            transition={{ duration: 0.5 }}
-            className="absolute inset-0 flex flex-col items-center justify-center overflow-hidden"
-          >
-            <div className="w-full max-w-lg grid grid-cols-2 gap-4 p-6 relative z-10">
-              {/* HUD Elements */}
-              {[
-                { icon: Globe, label: 'Rede Global', sub: 'Link via Satélite' },
-                { icon: Shield, label: 'Firewall de Segurança', sub: 'Protocolo Zero-Trust' },
-                { icon: Target, label: 'Rastreamento de Ativos', sub: 'Precisão GPS' },
-                { icon: Cpu, label: 'Processador Central', sub: 'Kernel Tático' },
-                { icon: Activity, label: 'Biometria', sub: 'Monitoramento de Status' },
-                { icon: Database, label: 'Storage Seguro', sub: 'Cofre Criptografado' }
-              ].map((item, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, x: i % 2 === 0 ? -20 : 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.1 }}
-                  className="bg-black/70 border border-cyan-500/50 p-5 rounded-2xl backdrop-blur-xl relative overflow-hidden group shadow-[0_0_25px_rgba(6,182,212,0.15)]"
-                >
-                  <div className="absolute top-0 right-0 p-3">
-                    <Activity className="w-3 h-3 text-cyan-500/40" />
-                  </div>
-                  
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="w-12 h-12 rounded-xl bg-cyan-500/20 flex items-center justify-center border border-cyan-500/40 shadow-[inset_0_0_15px_rgba(6,182,212,0.2)]">
-                      <item.icon className="w-6 h-6 text-cyan-400" />
-                    </div>
-                    <div>
-                      <h4 className="text-[10px] font-black text-white uppercase tracking-widest">{item.label}</h4>
-                      <p className="text-[7px] text-cyan-400 font-mono uppercase tracking-[0.2em]">{item.sub}</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-3">
-                    <div className="h-1 flex-1 bg-white/10 rounded-full overflow-hidden">
-                      <motion.div 
-                        initial={{ width: 0 }}
-                        animate={{ width: '100%' }}
-                        transition={{ duration: 1.5, delay: i * 0.2 }}
-                        className="h-full bg-gradient-to-r from-cyan-500 to-cyan-300 shadow-[0_0_12px_#06b6d4]"
-                      />
-                    </div>
-                    <span className="text-[8px] font-mono text-cyan-400">v2.4</span>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-            
-            {/* Tactical Grid Background */}
-            <div className="absolute inset-0 tech-grid opacity-20 pointer-events-none" />
-            
-            <div className="absolute bottom-16 left-1/2 -translate-x-1/2 text-center w-full">
-              <div className="flex items-center justify-center gap-4 mb-4">
-                <div className="w-12 h-[1px] bg-gradient-to-r from-transparent to-cyan-400" />
-                <h3 className="text-[12px] font-black text-white uppercase tracking-[1em] drop-shadow-[0_0_15px_rgba(34,211,238,0.6)]">
-                  Sincronizando Nodes
-                </h3>
-                <div className="w-12 h-[1px] bg-gradient-to-l from-transparent to-cyan-400" />
+              <div className="absolute inset-0 flex items-center justify-center">
+                 <h2 className="text-white font-black text-xl tracking-[1em] uppercase animate-pulse">Iniciando Protocolos</h2>
               </div>
-              <p className="text-[8px] font-mono text-cyan-400 uppercase tracking-[0.4em] animate-pulse">
-                Estabelecendo conexão de nível militar
-              </p>
             </div>
           </motion.div>
         )}
 
-        {/* STEP 2: Logo Reveal (4-6s) */}
+        {step === 1 && <GlobeZoom />}
+
         {step === 2 && (
           <motion.div 
             key="step2"
